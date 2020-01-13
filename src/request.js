@@ -9,31 +9,32 @@ axios.defaults.baseURL = 'http://localhost:3000/'
 
 // POST传参序列化
 axios.interceptors.request.use((config) => {
-  // let token = sessionStorage.getItem("token")
-  // if(token){
-  //   config.headers.Authorization = token
-  // }
+  let token = sessionStorage.getItem('token')
+  if (token) {
+    config.headers.token = token
+  }
   if (config.method === 'post' && config.headers['Content-Type'] !== 'multipart/form-data') {
     config.data = qs.stringify(config.data)
   }
   return config
 }, (error) => {
-  // vm.$toast('错误的传参')
   return Promise.reject(error)
 })
 
 axios.interceptors.response.use(response => {
-  const { resultCode } = response.data
+  const { status } = response.data
   if (response.status === 200) {
-    const except = (resultCode === -9 && response.config.url.indexOf('web_get_goods') > -1)
-    if (resultCode > -1 || except) {
+    const except = (status === -9 && response.config.url.indexOf('web_get_goods') > -1)
+    console.log(status, 'exce')
+    if (status === 200 || except) {
       return response.data
     }
-    // if (status === '403') {
-    //   vm.$toast('你还未登录')
-    //   location.href = '/#login'
-    //   location.reload()
-    // }
+    if (status === 403) {
+      vm.$message.error({message: '登录失效！', offset: 60})
+      sessionStorage.removeItem('token')
+      location.href = '/#login'
+      location.reload()
+    }
   } else {
     return Promise.reject(new Error('与服务器连接失败'))
   }

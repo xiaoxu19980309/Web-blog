@@ -15,21 +15,21 @@
           </el-form-item>
           <el-form-item label="密码">
             <!-- <i class="el-icon-lock"></i> -->
-            <el-input v-model="password" clearable style="width: 200px;"></el-input>
+            <el-input v-model="password" type="password" clearable style="width: 200px;"></el-input>
           </el-form-item>
-          <el-button class="bgcolorOther color-white" round style="width:100%;">登录</el-button>
+          <el-button class="bgcolorOther color-white" round style="width:100%;" @click="toLogin()">登录</el-button>
         </el-form>
         <el-form v-else ref="form" label-position="left" label-width="80px">
           <el-form-item label="用户名">
             <el-input v-model="form.username" clearable style="width: 200px;"></el-input>
           </el-form-item>
           <el-form-item label="密码">
-            <el-input v-model="form.psd" clearable style="width: 200px;"></el-input>
+            <el-input v-model="form.psd" type="password" clearable style="width: 200px;"></el-input>
           </el-form-item>
           <el-form-item label="确认密码">
-            <el-input v-model="form.psdconfirm" clearable style="width: 200px;"></el-input>
+            <el-input v-model="form.psdconfirm" type="password" clearable style="width: 200px;"></el-input>
           </el-form-item>
-          <el-button class="bgcolorOther color-white" round style="width:100%;">注册</el-button>
+          <el-button class="bgcolorOther color-white" round style="width:100%;" @click="toRegister">注册</el-button>
         </el-form>
       </div>
     </div>
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { api } from '@/utils/api'
 export default {
   name: 'Login',
   data () {
@@ -58,7 +59,63 @@ export default {
     }
   },
   methods: {
-
+    toLogin () {
+      if (!this.username) {
+        this.$message.warning('请输入用户名！')
+        return false
+      }
+      if (!this.password) {
+        this.$message.warning('请输入密码！')
+        return false
+      }
+      let param = {
+        username: this.username,
+        password: this.password
+      }
+      this.axios.post(api.login, param).then(res => {
+        console.log(res)
+        if (res.status === 200) {
+          this.$message.success('登录成功！')
+          sessionStorage.setItem('user', JSON.stringify(res.data))
+          this.$router.replace('/')
+        } else {
+          this.$message.error(res.msg)
+        }
+      }).catch(e => {
+        this.$message.error(e)
+      })
+    },
+    toRegister () {
+      if (!this.form.username) {
+        this.$message.warning('请输入用户名！')
+        return false
+      }
+      if (!this.form.psd) {
+        this.$message.warning('请输入密码！')
+        return false
+      }
+      if (!this.form.psdconfirm) {
+        this.$message.warning('请再次确认密码！')
+        return false
+      }
+      if (this.form.psd !== this.form.psdconfirm) {
+        this.$message.warning('两次输入的密码不一致！')
+        return false
+      }
+      let param = {
+        username: this.form.username,
+        password: this.form.psd
+      }
+      this.axios.post(api.register, param).then(res => {
+        if (res.status === 200) {
+          this.$message.success(res.msg)
+        } else {
+          this.$message.error(res.msg)
+        }
+      }).catch(e => {
+        this.$message.error(e)
+      })
+    }
   }
 }
 </script>

@@ -11,9 +11,11 @@
           <el-button slot="append" icon="el-icon-search"></el-button>
         </el-input>
         <div class="header-right">
-          <el-button type="text" class="color999 marginX15" @click="handleClick(2)">登录</el-button>
-          <el-button round class="marginX15" @click="handleClick(3)">注册</el-button>
-          <el-button round type="primary" >写文章</el-button>
+          <el-button type="text" v-if="!isLogin" class="color999 marginX15" @click="handleClick(2)">登录</el-button>
+          <el-button round v-if="!isLogin" class="marginX15" @click="handleClick(3)">注册</el-button>
+          <span v-if="isLogin" class="paddingX10">{{username}},欢迎您！</span>
+          <el-button round type="primary" @click="handleClick(4)">写文章</el-button>
+          <el-button type="text" v-if="isLogin" class="colorOther" @click="handleClick(5)">退出</el-button>
         </div>
       </el-header>
       <el-main>
@@ -35,11 +37,20 @@ export default {
     return {
       activeIndex: '1',
       activeIndex2: '1',
-      search: ''
+      search: '',
+      isLogin: false,
+      username: ''
     }
   },
   mounted () {
     // this.getTest()
+    if (sessionStorage.getItem('user')) {
+      this.isLogin = true
+      this.username = JSON.parse(sessionStorage.getItem('user')).username
+    } else {
+      this.$message.error('登录失效！')
+      this.$router.replace('/login')
+    }
   },
   methods: {
     handleSelect (key, keyPath) {
@@ -47,11 +58,17 @@ export default {
     },
     handleClick (num) {
       switch (num) {
-        case 1: this.$router.push({path: '/layout/home'})
+        case 1: this.$router.push({path: '/'})
           break
         case 2: this.$router.push({path: '/login', query: { type: 1 }})
           break
         case 3: this.$router.push({path: '/login', query: { type: 2 }})
+          break
+        case 4: this.$router.push({path: '/write'})
+          break
+        case 5: if (sessionStorage.getItem('user')) sessionStorage.removeItem('user')
+          this.$message.success('您已退出登录！')
+          this.$router.push({path: '/login'})
           break
       }
     },

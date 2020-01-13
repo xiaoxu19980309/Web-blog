@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Login from '@/components/Login'
 import Layout from '@/Layout'
 import Home from '@/components/Home'
+import Write from '@/components/Write'
 
 Vue.use(Router)
 const vm = new Vue()
@@ -22,11 +23,16 @@ const router = new Router({
       component: Login
     },
     {
-      path: '/layout',
+      path: '/write',
+      name: 'Write',
+      component: Write
+    },
+    {
+      path: '/',
       name: 'Layout',
       component: Layout,
       children: [{
-        path: 'home',
+        path: '',
         name: 'Home',
         component: Home
       }]

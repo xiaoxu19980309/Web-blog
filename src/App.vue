@@ -16,6 +16,15 @@ export default {
   padding: 0;
   box-sizing: border-box;
 }
+html{
+  height: 100%;
+}
+body{
+  height: 100%;
+}
+#app{
+  height: 100%;
+}
 h1, h2 {
   font-weight: normal;
 }
