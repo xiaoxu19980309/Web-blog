@@ -32,8 +32,7 @@ ul {
   list-style-type: none;
   padding: 0;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
+.el-popover{
+  min-width: 100px;
 }
 </style>

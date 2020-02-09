@@ -151,16 +151,16 @@ export default {
   padding: 10px;
   font-size: 18px;
   line-height: 1.1;
+  .active{
+    color: #409EFF;
+    border-bottom: 2px solid #409eff;
+  }
 }
 .main .title span{
   padding: 10px;
 }
 .main .title span:hover{
   cursor: pointer;
-}
-.active{
-  color: #409EFF;
-  border-bottom: 2px solid #409eff;
 }
 .container {
   line-height: 1.1;
