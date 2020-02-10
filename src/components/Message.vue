@@ -1,13 +1,12 @@
 <template>
   <div>
-    <div v-for="i in 10" :key="i">{{i}}</div>
-    <el-backtop target=".el-main"></el-backtop>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Home',
+  name: 'Message',
   data () {
     return {
 

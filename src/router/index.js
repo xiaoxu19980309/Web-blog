@@ -4,6 +4,9 @@ import Login from '@/components/Login'
 import Layout from '@/Layout'
 import Home from '@/components/Home'
 import Write from '@/components/Write'
+import Interest from '@/components/Interest'
+import Message from '@/components/Message'
+import Comments from '@/components/Comments'
 
 Vue.use(Router)
 const vm = new Vue()
@@ -35,7 +38,23 @@ const router = new Router({
         path: '',
         name: 'Home',
         component: Home
-      }]
+      },
+      {
+        path: '/interest',
+        name: 'Interest',
+        component: Interest
+      },
+      {
+        path: '/message',
+        name: 'message',
+        component: Message,
+        children: [{
+          path: '',
+          name: 'Comments',
+          component: Comments
+        }]
+      }
+      ]
     }
   ]
 })

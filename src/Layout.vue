@@ -3,7 +3,33 @@
     <el-container>
       <el-header>
         <div class="header-div logo colorMain marginX10">微作</div>
-        <div class="header-div colorMain marginX10" @click="handleClick(1)">首页</div>
+        <div :class="['header-div','color666','_divhover',{'colorMain': activePart === 1 }]" @click="handleClick(1)">首页</div>
+        <div :class="['header-div','color666','_divhover',{'colorMain': activePart === 2 }]" @click="handleClick(6)">关注</div>
+        <el-popover
+            placement="bottom"
+            trigger="hover"
+          >
+          <span>
+            <ul class="ul_demo">
+              <li>
+                <el-button type="text" style="color: #666;width: 100%;padding:12px;" onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'">
+                  <i class="iconfont icon-ziyuan" style="margin-right: 8px"></i>评论
+                </el-button>
+              </li>
+              <li>
+                <el-button type="text" style="color: #666;width: 100%" onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'">
+                  <i class="iconfont icon-follow" style="margin-right: 8px"></i>关注
+                </el-button>
+              </li>
+              <li>
+                <el-button type="text" style="color: #666;width: 100%" onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'">
+                  <i class="iconfont icon-aixin" style="margin-right: 8px"></i>喜欢和赞
+                </el-button>
+              </li>
+            </ul>
+          </span>
+          <div :class="['header-div','color666','_divhover',{'colorMain': activePart === 3 }]" slot="reference" @click="handleClick(7)">消息</div>
+          </el-popover>
         <el-input
           placeholder="搜索"
           v-model="search"
@@ -35,14 +61,22 @@ export default {
   },
   data () {
     return {
-      activeIndex: '1',
-      activeIndex2: '1',
+      activePart: 1,
       search: '',
       isLogin: false,
       username: ''
     }
   },
   mounted () {
+    let path = this.$route.path
+    switch (path) {
+      case '/': this.activePart = 1
+        break
+      case '/interest': this.activePart = 2
+        break
+      case '/message': this.activePart = 3
+        break
+    }
     // this.getTest()
     if (sessionStorage.getItem('user')) {
       this.isLogin = true
@@ -59,6 +93,7 @@ export default {
     handleClick (num) {
       switch (num) {
         case 1: this.$router.push({path: '/'})
+          this.activePart = 1
           break
         case 2: this.$router.push({path: '/login', query: { type: 1 }})
           break
@@ -69,6 +104,12 @@ export default {
         case 5: if (sessionStorage.getItem('user')) sessionStorage.removeItem('user')
           this.$message.success('您已退出登录！')
           this.$router.push({path: '/login'})
+          break
+        case 6: this.$router.push({path: '/interest'})
+          this.activePart = 2
+          break
+        case 7: this.$router.push({path: '/message'})
+          this.activePart = 3
           break
       }
     },
