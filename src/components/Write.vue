@@ -398,6 +398,7 @@ export default {
   .center{
     width: 30%;
     height: 100%;
+    text-align: left;
     border-right: 1px solid #d9d9d9;
     .article{
       overflow-y: scroll;
@@ -484,6 +485,7 @@ export default {
   .right{
     position: relative;
     width: 70%;
+    text-align: left;
     height: 100%;
     ._3edit{
       position: relative;

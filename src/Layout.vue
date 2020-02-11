@@ -3,32 +3,38 @@
     <el-container>
       <el-header>
         <div class="header-div logo colorMain marginX10">微作</div>
-        <div :class="['header-div','color666','_divhover',{'colorMain': activePart === 1 }]" @click="handleClick(1)">首页</div>
-        <div :class="['header-div','color666','_divhover',{'colorMain': activePart === 2 }]" @click="handleClick(6)">关注</div>
+        <div :class="['header-div','color666','_divhoverbg',{'colorMain': activePart === 1 }]" @click="handleClick(1)">首页</div>
+        <div :class="['header-div','color666','_divhoverbg',{'colorMain': activePart === 2 }]" @click="handleClick(6)">关注</div>
         <el-popover
             placement="bottom"
             trigger="hover"
           >
           <span>
-            <ul class="ul_demo">
+            <ul>
               <li>
-                <el-button type="text" style="color: #666;width: 100%;padding:12px;" onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'">
+                <el-button type="text" style="color: #666;width: 100%;padding:12px;"
+                onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'"
+                @click="handleClick(8)">
                   <i class="iconfont icon-ziyuan" style="margin-right: 8px"></i>评论
                 </el-button>
               </li>
               <li>
-                <el-button type="text" style="color: #666;width: 100%" onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'">
+                <el-button type="text" style="color: #666;width: 100%"
+                onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'"
+                @click="handleClick(9)">
                   <i class="iconfont icon-follow" style="margin-right: 8px"></i>关注
                 </el-button>
               </li>
               <li>
-                <el-button type="text" style="color: #666;width: 100%" onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'">
+                <el-button type="text" style="color: #666;width: 100%"
+                onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'"
+                @click="handleClick(10)">
                   <i class="iconfont icon-aixin" style="margin-right: 8px"></i>喜欢和赞
                 </el-button>
               </li>
             </ul>
           </span>
-          <div :class="['header-div','color666','_divhover',{'colorMain': activePart === 3 }]" slot="reference" @click="handleClick(7)">消息</div>
+          <div :class="['header-div','color666','_divhoverbg',{'colorMain': activePart === 3 }]" slot="reference" @click="handleClick(7)">消息</div>
           </el-popover>
         <el-input
           placeholder="搜索"
@@ -69,13 +75,12 @@ export default {
   },
   mounted () {
     let path = this.$route.path
-    switch (path) {
-      case '/': this.activePart = 1
-        break
-      case '/interest': this.activePart = 2
-        break
-      case '/message': this.activePart = 3
-        break
+    if (path.indexOf('message') >= 0) {
+      this.activePart = 3
+    } else if (path.indexOf('interest') >= 0) {
+      this.activePart = 2
+    } else {
+      this.activePart = 1
     }
     // this.getTest()
     if (sessionStorage.getItem('user')) {
@@ -109,6 +114,15 @@ export default {
           this.activePart = 2
           break
         case 7: this.$router.push({path: '/message'})
+          this.activePart = 3
+          break
+        case 8: this.$router.push({path: '/message'})
+          this.activePart = 3
+          break
+        case 9: this.$router.push({path: '/message/follows'})
+          this.activePart = 3
+          break
+        case 10: this.$router.push({path: '/message/likepraise'})
           this.activePart = 3
           break
       }
@@ -155,10 +169,13 @@ body{
   float: right;
 }
 .el-main {
+  margin-left: auto;
+  margin-right: auto;
+  width: 960px;
   background-color: #fff;
   color: #333;
   text-align: center;
-  line-height: 160px;
+  padding: 30px 0;
 }
 .el-container{
   height: 100%;

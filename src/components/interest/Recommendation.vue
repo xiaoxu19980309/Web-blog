@@ -1,12 +1,12 @@
 <template>
   <div>
-    comments
+    Recommendation
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Comments',
+  name: 'Recommendation',
   data () {
     return {
 

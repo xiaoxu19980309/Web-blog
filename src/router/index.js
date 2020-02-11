@@ -6,7 +6,12 @@ import Home from '@/components/Home'
 import Write from '@/components/Write'
 import Interest from '@/components/Interest'
 import Message from '@/components/Message'
-import Comments from '@/components/Comments'
+import Comments from '@/components/message/Comments'
+import Follows from '@/components/message/Follows'
+import LikePraise from '@/components/message/LikePraise'
+import Others from '@/components/message/Others'
+import InterestContent from '@/components/interest/InterestContent'
+import Recommendation from '@/components/interest/Recommendation'
 
 Vue.use(Router)
 const vm = new Vue()
@@ -34,6 +39,7 @@ const router = new Router({
       path: '/',
       name: 'Layout',
       component: Layout,
+      redirect: '',
       children: [{
         path: '',
         name: 'Home',
@@ -42,16 +48,43 @@ const router = new Router({
       {
         path: '/interest',
         name: 'Interest',
-        component: Interest
+        component: Interest,
+        redirect: '/interest/content',
+        children: [{
+          path: '/interest/content',
+          name: 'InterestContent',
+          component: InterestContent
+        },
+        {
+          path: '/interest/recommendation',
+          name: 'Recommendation',
+          component: Recommendation
+        }]
       },
       {
         path: '/message',
         name: 'message',
         component: Message,
+        redirect: '/message/comments',
         children: [{
-          path: '',
+          path: '/message/comments',
           name: 'Comments',
           component: Comments
+        },
+        {
+          path: '/message/follows',
+          name: 'Follows',
+          component: Follows
+        },
+        {
+          path: '/message/likepraise',
+          name: 'LikePraise',
+          component: LikePraise
+        },
+        {
+          path: '/message/others',
+          name: 'Others',
+          component: Others
         }]
       }
       ]
