@@ -1,60 +1,58 @@
 <template>
-  <div id="app">
-    <el-container>
-      <el-header>
-        <div class="header-div logo colorMain marginX10">微作</div>
-        <div :class="['header-div','color666','_divhoverbg',{'colorMain': activePart === 1 }]" @click="handleClick(1)">首页</div>
-        <div :class="['header-div','color666','_divhoverbg',{'colorMain': activePart === 2 }]" @click="handleClick(6)">关注</div>
-        <el-popover
-            placement="bottom"
-            trigger="hover"
-          >
-          <span>
-            <ul>
-              <li>
-                <el-button type="text" style="color: #666;width: 100%;padding:12px;"
-                onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'"
-                @click="handleClick(8)">
-                  <i class="iconfont icon-ziyuan" style="margin-right: 8px"></i>评论
-                </el-button>
-              </li>
-              <li>
-                <el-button type="text" style="color: #666;width: 100%"
-                onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'"
-                @click="handleClick(9)">
-                  <i class="iconfont icon-follow" style="margin-right: 8px"></i>关注
-                </el-button>
-              </li>
-              <li>
-                <el-button type="text" style="color: #666;width: 100%"
-                onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'"
-                @click="handleClick(10)">
-                  <i class="iconfont icon-aixin" style="margin-right: 8px"></i>喜欢和赞
-                </el-button>
-              </li>
-            </ul>
-          </span>
-          <div :class="['header-div','color666','_divhoverbg',{'colorMain': activePart === 3 }]" slot="reference" @click="handleClick(7)">消息</div>
-          </el-popover>
-        <el-input
-          placeholder="搜索"
-          v-model="search"
-          clearable>
-          <el-button slot="append" icon="el-icon-search"></el-button>
-        </el-input>
-        <div class="header-right">
-          <el-button type="text" v-if="!isLogin" class="color999 marginX15" @click="handleClick(2)">登录</el-button>
-          <el-button round v-if="!isLogin" class="marginX15" @click="handleClick(3)">注册</el-button>
-          <span v-if="isLogin" class="paddingX10">{{username}},欢迎您！</span>
-          <el-button round type="primary" @click="handleClick(4)">写文章</el-button>
-          <el-button type="text" v-if="isLogin" class="colorOther" @click="handleClick(5)">退出</el-button>
-        </div>
-      </el-header>
-      <el-main>
-        <router-view/>
-      </el-main>
-    </el-container>
-  </div>
+  <el-container>
+    <el-header>
+      <div class="header-div logo colorMain marginX10">微作</div>
+      <div :class="['header-div','color666','_divhoverbg',{'colorMain': activePart === 1 }]" @click="handleClick(1)">首页</div>
+      <div :class="['header-div','color666','_divhoverbg',{'colorMain': activePart === 2 }]" @click="handleClick(6)">关注</div>
+      <el-popover
+          placement="bottom"
+          trigger="hover"
+        >
+        <span>
+          <ul>
+            <li>
+              <el-button type="text" style="color: #666;width: 100%;padding:12px;"
+              onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'"
+              @click="handleClick(8)">
+                <i class="iconfont icon-ziyuan" style="margin-right: 8px"></i>评论
+              </el-button>
+            </li>
+            <li>
+              <el-button type="text" style="color: #666;width: 100%"
+              onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'"
+              @click="handleClick(9)">
+                <i class="iconfont icon-follow" style="margin-right: 8px"></i>关注
+              </el-button>
+            </li>
+            <li>
+              <el-button type="text" style="color: #666;width: 100%"
+              onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'"
+              @click="handleClick(10)">
+                <i class="iconfont icon-aixin" style="margin-right: 8px"></i>喜欢和赞
+              </el-button>
+            </li>
+          </ul>
+        </span>
+        <div :class="['header-div','color666','_divhoverbg',{'colorMain': activePart === 3 }]" slot="reference" @click="handleClick(7)">消息</div>
+        </el-popover>
+      <el-input
+        placeholder="搜索"
+        v-model="search"
+        clearable>
+        <el-button slot="append" icon="el-icon-search"></el-button>
+      </el-input>
+      <div class="header-right">
+        <el-button type="text" v-if="!isLogin" class="color999 marginX15" @click="handleClick(2)">登录</el-button>
+        <el-button round v-if="!isLogin" class="marginX15" @click="handleClick(3)">注册</el-button>
+        <span v-if="isLogin" class="paddingX10">{{username}},欢迎您！</span>
+        <el-button round type="primary" @click="handleClick(4)">写文章</el-button>
+        <el-button type="text" v-if="isLogin" class="colorOther" @click="handleClick(5)">退出</el-button>
+      </div>
+    </el-header>
+    <el-main>
+      <router-view/>
+    </el-main>
+  </el-container>
 </template>
 
 <script>
@@ -74,14 +72,7 @@ export default {
     }
   },
   mounted () {
-    let path = this.$route.path
-    if (path.indexOf('message') >= 0) {
-      this.activePart = 3
-    } else if (path.indexOf('interest') >= 0) {
-      this.activePart = 2
-    } else {
-      this.activePart = 1
-    }
+    this.changePart()
     // this.getTest()
     if (sessionStorage.getItem('user')) {
       this.isLogin = true
@@ -91,7 +82,20 @@ export default {
       this.$router.replace('/login')
     }
   },
+  beforeUpdate () {
+    this.changePart()
+  },
   methods: {
+    changePart () {
+      let path = this.$route.path
+      if (path.indexOf('message') >= 0) {
+        this.activePart = 3
+      } else if (path.indexOf('interest') >= 0) {
+        this.activePart = 2
+      } else {
+        this.activePart = 1
+      }
+    },
     handleSelect (key, keyPath) {
       console.log(key, keyPath)
     },
@@ -149,6 +153,7 @@ html{
 }
 body{
   height: 100%;
+  min-width: 768px;
 }
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -159,6 +164,12 @@ body{
   height: 100%;
 }
 .el-header {
+  position: fixed;
+  right: 0;
+  left: 0;
+  top: 0;
+  z-index: 1030;
+  margin-bottom: 20px;
   background-color: #fff;
   color: #333;
   text-align: left;
@@ -174,18 +185,20 @@ body{
   width: 960px;
   background-color: #fff;
   color: #333;
+  overflow: inherit;
   text-align: center;
   padding: 30px 0;
 }
 .el-container{
   height: 100%;
+  padding-top: 60px!important;
 }
 body > .el-container {
   margin-bottom: 40px;
 }
-.el-menu{
+/* .el-menu{
   background-color: #fff;
-}
+} */
 .header-div{
   width: 80px;
   line-height: 60px;

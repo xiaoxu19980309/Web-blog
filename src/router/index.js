@@ -10,8 +10,9 @@ import Comments from '@/components/message/Comments'
 import Follows from '@/components/message/Follows'
 import LikePraise from '@/components/message/LikePraise'
 import Others from '@/components/message/Others'
-import InterestContent from '@/components/interest/InterestContent'
 import Recommendation from '@/components/interest/Recommendation'
+import Moments from '@/components/interest/Moments'
+import User from '@/components/interest/User'
 
 Vue.use(Router)
 const vm = new Vue()
@@ -49,16 +50,21 @@ const router = new Router({
         path: '/interest',
         name: 'Interest',
         component: Interest,
-        redirect: '/interest/content',
+        redirect: '/interest/moments',
         children: [{
-          path: '/interest/content',
-          name: 'InterestContent',
-          component: InterestContent
-        },
-        {
           path: '/interest/recommendation',
           name: 'Recommendation',
           component: Recommendation
+        },
+        {
+          path: '/interest/moments',
+          name: 'Moments',
+          component: Moments
+        },
+        {
+          path: '/interest/user',
+          name: 'User',
+          component: User
         }]
       },
       {

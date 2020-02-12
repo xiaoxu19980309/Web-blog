@@ -43,20 +43,24 @@ export default {
     }
   },
   mounted () {
-    let path = this.$route.path
-    console.log(path)
-    if (path.indexOf('comments') >= 0) {
-      this.active = 1
-    } else if (path.indexOf('follows') >= 0) {
-      this.active = 2
-    } else if (path.indexOf('likepraise') >= 0) {
-      this.active = 3
-    } else {
-      this.active = 4
-    }
-    console.log(this.active)
+    this.changePart()
+  },
+  beforeUpdate () {
+    this.changePart()
   },
   methods: {
+    changePart () {
+      let path = this.$route.path
+      if (path.indexOf('comments') >= 0) {
+        this.active = 1
+      } else if (path.indexOf('follows') >= 0) {
+        this.active = 2
+      } else if (path.indexOf('likepraise') >= 0) {
+        this.active = 3
+      } else {
+        this.active = 4
+      }
+    },
     handleClick (num) {
       switch (num) {
         case 1: this.active = 1

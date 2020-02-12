@@ -21,6 +21,7 @@ html{
 }
 body{
   height: 100%;
+  overflow-y: scroll;
 }
 #app{
   height: 100%;
@@ -34,5 +35,11 @@ ul {
 }
 .el-popover{
   min-width: 100px;
+}
+a{
+  text-decoration: none;
+}
+.iconfont{
+  font-size: inherit;
 }
 </style>
