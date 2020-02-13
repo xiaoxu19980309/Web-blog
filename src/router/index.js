@@ -40,11 +40,16 @@ const router = new Router({
       path: '/',
       name: 'Layout',
       component: Layout,
-      redirect: '',
+      redirect: '/home',
       children: [{
-        path: '',
+        path: '/home',
         name: 'Home',
         component: Home
+      },
+      {
+        path: '/user',
+        name: 'UserMain',
+        component: User
       },
       {
         path: '/interest',

@@ -52,6 +52,15 @@
     <el-main>
       <router-view/>
     </el-main>
+    <div class="side-tool" id="sideTool" @click="toTop">
+      <ul>
+        <li>
+          <a class="function-button">
+            <i class="el-icon-arrow-up ic-backtop"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
   </el-container>
 </template>
 
@@ -81,6 +90,7 @@ export default {
       this.$message.error('登录失效！')
       this.$router.replace('/login')
     }
+    this.heightTop()
   },
   beforeUpdate () {
     this.changePart()
@@ -95,6 +105,31 @@ export default {
       } else {
         this.activePart = 1
       }
+    },
+    heightTop () {
+      window.onscroll = function () {
+        // 变量scrollTop是滚动条滚动时，距离顶部的距离
+        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+        if (scrollTop >= 200) {
+          document.getElementById('sideTool').style.visibility = 'visible'
+        } else {
+          document.getElementById('sideTool').style.visibility = 'hidden'
+        }
+      }
+    },
+    toTop () {
+      let scrollTopTimer = setInterval(() => {
+        let top = document.documentElement.scrollTop || document.body.scrollTop
+        let speed = top / 6
+        if (document.body.scrollTop !== 0) {
+          document.body.scrollTop -= speed
+        } else {
+          document.documentElement.scrollTop -= speed
+        }
+        if (top === 0) {
+          clearInterval(scrollTopTimer)
+        }
+      }, 30)
     },
     handleSelect (key, keyPath) {
       console.log(key, keyPath)

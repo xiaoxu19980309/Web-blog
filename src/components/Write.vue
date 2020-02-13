@@ -272,16 +272,6 @@ export default {
     background-color: #404040;
     color: #f2f2f2;
     z-index: 100;
-    .back{
-      padding: 30px 18px 5px;
-      .backbtn{
-        background-color: #404040;
-        border-color: #409eff;
-        color: #409eff;
-        width: 100%;
-        height: 40px;
-      }
-    }
     .list{
       .default{
         position: relative;
