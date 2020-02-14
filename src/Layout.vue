@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container :class="[{'colorf9bg': isArticle}]">
     <el-header>
       <div class="header-div logo colorMain marginX10">微作</div>
       <div :class="['header-div','color666','_divhoverbg',{'colorMain': activePart === 1 }]" @click="handleClick(1)">首页</div>
@@ -49,7 +49,7 @@
         <el-button type="text" v-if="isLogin" class="colorOther" @click="handleClick(5)">退出</el-button>
       </div>
     </el-header>
-    <el-main>
+    <el-main :class="[{'margin10X': isArticle}]">
       <router-view/>
     </el-main>
     <div class="side-tool" id="sideTool" @click="toTop">
@@ -77,7 +77,8 @@ export default {
       activePart: 1,
       search: '',
       isLogin: false,
-      username: ''
+      username: '',
+      isArticle: false
     }
   },
   mounted () {
@@ -100,10 +101,15 @@ export default {
       let path = this.$route.path
       if (path.indexOf('message') >= 0) {
         this.activePart = 3
+        this.isArticle = false
       } else if (path.indexOf('interest') >= 0) {
         this.activePart = 2
+        this.isArticle = false
+      } else if (path.indexOf('article') >= 0) {
+        this.isArticle = true
       } else {
         this.activePart = 1
+        this.isArticle = false
       }
     },
     heightTop () {
@@ -210,6 +216,7 @@ body{
   text-align: left;
   line-height: 60px;
   border-bottom: 1px solid #f0f0f0;
+  box-shadow: 0 2px 10px rgba(0,0,0,.05);
 }
 .el-header ul{
   float: right;
@@ -231,9 +238,6 @@ body{
 body > .el-container {
   margin-bottom: 40px;
 }
-/* .el-menu{
-  background-color: #fff;
-} */
 .header-div{
   width: 80px;
   line-height: 60px;

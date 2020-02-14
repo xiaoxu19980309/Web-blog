@@ -8,28 +8,31 @@
         <span :class="['paddingX10','padding10X',{'active': register}]" @click="register=true">注册</span>
       </h4>
       <div class="container">
-        <el-form v-if="!register" ref="form" label-position="left" label-width="80px">
+        <el-form v-if="!register" label-position="left" label-width="80px">
           <el-form-item label="用户名">
             <!-- <i class="el-icon-user"></i> -->
             <el-input v-model="username" clearable style="width: 200px;" placeholder=""></el-input>
           </el-form-item>
           <el-form-item label="密码">
             <!-- <i class="el-icon-lock"></i> -->
-            <el-input v-model="password" type="password" clearable style="width: 200px;"></el-input>
+            <el-input v-model="password" type="password" show-password style="width: 200px;"></el-input>
           </el-form-item>
-          <el-button class="bgcolorOther color-white" round style="width:100%;" @click="toLogin()">登录</el-button>
+          <button class="btn login-btn" round style="width:100%;" @click="toLogin()">登录</button>
         </el-form>
-        <el-form v-else ref="form" label-position="left" label-width="80px">
+        <el-form v-else label-position="left" label-width="80px">
           <el-form-item label="用户名">
             <el-input v-model="form.username" clearable style="width: 200px;"></el-input>
           </el-form-item>
           <el-form-item label="密码">
-            <el-input v-model="form.psd" type="password" clearable style="width: 200px;"></el-input>
+            <el-input v-model="form.psd" type="password" show-password style="width: 200px;"></el-input>
           </el-form-item>
           <el-form-item label="确认密码">
-            <el-input v-model="form.psdconfirm" type="password" clearable style="width: 200px;"></el-input>
+            <el-input v-model="form.psdconfirm" show-password style="width: 200px;"></el-input>
           </el-form-item>
-          <el-button class="bgcolorOther color-white" round style="width:100%;" @click="toRegister">注册</el-button>
+          <el-form-item label="昵称">
+            <el-input v-model="form.nickname" type="text" maxlength="10" show-word-limit style="width: 200px;" ></el-input>
+          </el-form-item>
+          <button class="btn login-btn" round style="width:100%;" @click="toRegister">注册</button>
         </el-form>
       </div>
     </div>
@@ -47,7 +50,8 @@ export default {
       form: {
         username: '',
         psd: '',
-        psdconfirm: ''
+        psdconfirm: '',
+        nickname: ''
       },
       register: false
     }
@@ -56,6 +60,10 @@ export default {
     let type = this.$route.query.type
     if (type === 2) {
       this.register = true
+      this.form.username = ''
+      this.form.psd = ''
+      this.form.psdconfirm = ''
+      this.form.nickname = ''
     }
   },
   methods: {
@@ -102,13 +110,19 @@ export default {
         this.$message.warning('两次输入的密码不一致！')
         return false
       }
+      if (!this.form.nickname) {
+        this.$message.warning('请输入昵称！')
+        return false
+      }
       let param = {
         username: this.form.username,
-        password: this.form.psd
+        password: this.form.psd,
+        nickname: this.form.nickname
       }
       this.axios.post(api.register, param).then(res => {
         if (res.status === 200) {
           this.$message.success(res.msg)
+          this.register = false
         } else {
           this.$message.error(res.msg)
         }

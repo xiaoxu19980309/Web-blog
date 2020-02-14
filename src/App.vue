@@ -43,4 +43,13 @@ a{
 .iconfont{
   font-size: inherit;
 }
+h1, h2, h3, h4, h5, h6 {
+  color: #404040;
+  text-rendering: optimizelegibility;
+  margin-top: 0;
+  margin-bottom: .5em
+}
+button{
+  outline: none;
+}
 </style>

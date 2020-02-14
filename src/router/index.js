@@ -13,6 +13,7 @@ import Others from '@/components/message/Others'
 import Recommendation from '@/components/interest/Recommendation'
 import Moments from '@/components/interest/Moments'
 import User from '@/components/interest/User'
+import Article from '@/components/Article'
 
 Vue.use(Router)
 const vm = new Vue()
@@ -97,8 +98,12 @@ const router = new Router({
           name: 'Others',
           component: Others
         }]
-      }
-      ]
+      },
+      {
+        path: '/article',
+        name: 'Article',
+        component: Article
+      }]
     }
   ]
 })
