@@ -9,9 +9,9 @@ axios.defaults.baseURL = 'http://localhost:3000/'
 
 // POST传参序列化
 axios.interceptors.request.use((config) => {
-  let token = sessionStorage.getItem('token')
-  if (token) {
-    config.headers.token = token
+  let user = JSON.parse(sessionStorage.getItem('user'))
+  if (user && user.token) {
+    config.headers.token = user.token
   }
   if (config.method === 'post' && config.headers['Content-Type'] !== 'multipart/form-data') {
     config.data = qs.stringify(config.data)
@@ -25,14 +25,13 @@ axios.interceptors.response.use(response => {
   const { status } = response.data
   if (response.status === 200) {
     const except = (status === -9 && response.config.url.indexOf('web_get_goods') > -1)
-    console.log(status, 'exce')
     if (status === 200 || except) {
       return response.data
     }
     if (status === 403) {
       vm.$message.error({message: '登录失效！', offset: 60})
-      sessionStorage.removeItem('token')
-      location.href = '/#login'
+      sessionStorage.removeItem('user')
+      location.href = '/#/login'
       location.reload()
     }
   } else {

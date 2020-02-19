@@ -21,7 +21,7 @@ html{
 }
 body{
   height: 100%;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
 }
 #app{
   height: 100%;

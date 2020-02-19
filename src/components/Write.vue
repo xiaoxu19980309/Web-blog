@@ -24,7 +24,7 @@
         </div>
       </div>
       <ul class="list">
-        <li title="日记本" class="default active">
+        <li :class="['default',{'active': currentIndex1 === index}]" v-for="(item,index) in collections" :key="index" @click="chooseColl(item,index)">
           <div class="list_right">
             <el-popover
               placement="bottom"
@@ -35,23 +35,23 @@
                   <li>
                     <el-button type="text" style="color: #666;width: 100%;padding:12px;"
                     onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'"
-                    @click="editClass">
+                    @click="editClass(item)">
                       <i class="el-icon-edit" style="margin-right: 8px"></i>修改文集
                     </el-button>
                   </li>
                   <li>
                     <el-button type="text" style="color: #666;width: 100%"
                     onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'"
-                    @click="deleteClass">
+                    @click="deleteClass(item)">
                       <i class="el-icon-delete" style="margin-right: 8px"></i>删除文集
                     </el-button>
                   </li>
                 </ul>
               </span>
-              <i class="el-icon-setting" @click="edititem()" slot="reference"></i>
+              <i class="el-icon-setting" slot="reference"></i>
             </el-popover>
           </div>
-          <span>日记本</span>
+          <span>{{item.name}}</span>
         </li>
       </ul>
       <div class="bottom el-col-4">
@@ -89,14 +89,14 @@
         <div class="article">
           <div class="content">
             <div>
-              <div class="xjwz">
+              <div class="xjwz" @click="newArticle(1)">
                 <i class="el-icon-circle-plus"></i>
                 <span>新建文章</span>
               </div>
               <ul class="wzlb">
-                <li class="now">
+                <li :class="[{'now': currentIndex2 === index}]" v-for="(item, index) in currentItem.articleList" :key="index" @click="chooseArti(index)">
                   <i class="el-icon-document document"></i>
-                  <div class="title">无标题文章</div>
+                  <div class="title">{{item.title}}</div>
                   <el-popover
                     placement="top-end"
                     trigger="click"
@@ -114,7 +114,9 @@
                         </el-button>
                       </li>
                       <li>
-                        <el-button type="text" style="color: #666;width: 100%;padding:12px;" onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'">
+                        <el-button type="text" style="color: #666;width: 100%;padding:12px;"
+                        onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'"
+                        @click="deleteArticle(item, index)">
                           <i class="el-icon-delete" style="margin-right: 8px"></i>删除文章
                         </el-button>
                       </li>
@@ -131,7 +133,7 @@
                   </el-popover>
                 </li>
               </ul>
-              <div class="xjwz2">
+              <div class="xjwz2" @click="newArticle(2)">
                 <i class="el-icon-plus"></i>
                 <span>在下方新建文章</span>
               </div>
@@ -139,8 +141,11 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="16" class="right">
-        <div class="_3edit">
+      <el-col :span="16" class="right" :style="{'backgroundColor': (hasArticle? 'white':'#f2f2f2')}">
+        <div class="_3edit" v-show="hasArticle">
+          <span class="rtText" v-show="hasSaved">已保存</span>
+          <span class="rtText" v-show="!hasSaved">保存中...</span>
+          <input v-model="articleTitle" class="_inputT" />
           <div class="">
             <quill-editor
               v-model="editContent"
@@ -177,13 +182,14 @@
       <el-input width="" v-model="newClassName"></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible2 = false">取消</el-button>
-        <el-button type="primary" @click="dialogVisible2 = false">确定</el-button>
+        <el-button type="primary" @click="confirmEditC">确定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import { api } from '@/utils/api'
 import { quillEditor } from 'vue-quill-editor'
 import { addQuillTitle } from '@/utils/quill-title.js'
 export default {
@@ -195,14 +201,49 @@ export default {
     return {
       classname: '',
       newClassName: '',
-      isadd: false,
-      item: false,
-      dialogVisible1: false,
-      dialogVisible2: false,
+      isadd: false, // 新建文集
+      dialogVisible1: false, // 常见问题
+      dialogVisible2: false, // 弹窗修改文集名
+      hasArticle: false, // 没有文章
       editContent: '',
+      currentItem: {},
+      currentIndex1: 0,
+      currentIndex2: 0,
       editorOption: {
 
+      },
+      collections: [],
+      articleTitle: '无标题文章',
+      hasSaved: true
+    }
+  },
+  watch: {
+    currentIndex1 (newVal, oldVal) {
+      console.log(oldVal, '///', newVal, '////')
+      if (this.collections[newVal].articleList.length >= 1) {
+        this.hasArticle = true
+      } else {
+        this.hasArticle = false
       }
+    },
+    articleTitle (newVal, oldVal) {
+      console.log(oldVal, '///', newVal, '////')
+      this.currentItem.articleList[this.currentIndex2].title = newVal
+      setTimeout(() => {
+        this.hasSaved = false
+        this.axios.post(api.updateArticle, {
+          articleId: this.currentItem.articleList[this.currentIndex2]._id,
+          title: newVal
+        }).then(res => {
+          if (res.status === 200) {
+            this.hasSaved = true
+          } else {
+            this.$message.error('保存失败！')
+          }
+        }).catch(e => {
+          console.log(e)
+        })
+      }, 2000)
     }
   },
   mounted () {
@@ -212,47 +253,166 @@ export default {
       this.$router.replace('/login')
     }
     addQuillTitle()
+    this.getList()
   },
   methods: {
+    getList () {
+      this.axios.post(api.getCollections).then(res => {
+        if (res.status === 200) {
+          this.collections = res.data
+          if (this.collections.length > 0) {
+            this.currentItem = this.collections[0]
+          }
+          if (this.currentItem.articleList.length >= 1) {
+            this.hasArticle = true
+            this.articleTitle = this.currentItem.articleList[0].title
+            this.editContent = this.currentItem.articleList[0].content.toString()
+          }
+        } else {
+          this.$message.error('获取文集列表失败！')
+        }
+      }).catch(e => {
+
+      })
+    },
     back () {
       this.$router.replace('/')
     },
     addClass () {
       this.isadd = true
+      this.classname = ''
     },
     addconfirm () {
       if (this.classname.trim().length === 0) {
         this.$message.warning('请输入文集名!')
       }
+      this.isadd = false
+      this.axios.post(api.addCollection, {
+        name: this.classname.trim()
+      }).then(res => {
+        if (res.status === 200) {
+          this.$message.success('新建成功！')
+          this.getList()
+        } else {
+          this.$message.error('新建失败！')
+        }
+      }).catch(e => {
+
+      })
     },
-    edititem () {
-      this.item = !this.item
+    chooseColl (item, index) {
+      this.currentItem = item
+      this.currentIndex1 = index
+      // console.log(item, index)
+    },
+    chooseArti (index) {
+      this.currentIndex2 = index
+      this.hasArticle = true
+    },
+    confirmEditC () {
+      if (this.newClassName.trim().length === 0) {
+        this.$message.warning('请输入文集名!')
+      }
+      this.axios.post(api.editCollection, {
+        name: this.newClassName.trim(),
+        collectionId: this.currentItem._id
+      }).then(res => {
+        if (res.status === 200) {
+          this.$message.success('修改成功！')
+          this.dialogVisible2 = false
+          this.getList()
+        } else {
+          this.$message.error('修改失败！')
+        }
+      }).catch(e => {
+        this.$message.error('修改失败！')
+      })
     },
     hasProblem () {
       this.dialogVisible1 = true
     },
-    editClass () {
+    editClass (item) {
       this.dialogVisible2 = true
+      this.currentItem = item
+      this.newClassName = item.name
     },
-    deleteClass () {
+    deleteClass (item) {
+      let _this = this
       this.$confirm('确定删除该文集？', '提示', {
         confirmTextButton: '确定',
         cancelTextButton: '取消',
         type: 'warning'
       }).then(() => {
-        console.log('then')
+        _this.axios.post(api.deleteCollection, {
+          collectionId: item._id
+        }).then(res => {
+          if (res.status === 200) {
+            _this.$message.success('删除成功!')
+            _this.getList()
+          } else {
+            _this.$message.error('删除失败!')
+          }
+        }).catch(e => {
+          _this.$message.error('出错了')
+        })
       }).catch(() => {
         console.log('cancel')
       })
     },
-    onEditorBlur () {
+    newArticle (type) {
+      this.axios.post(api.addArticle, {
+        collectionId: this.currentItem._id,
+        title: this.articleTitle,
+        content: ''
+      }).then(res => {
+        if (res.status === 200) {
+          this.articles.splice(type === 1 ? 0 : this.articles.length - 1, 0, {title: '无标题文章'})
+          console.log(this.articles, 'ads')
+          this.articleTitle = '无标题文章'
+          this.$message.success('新建成功！')
+        } else {
+          this.$message.error('新建失败!')
+        }
+      }).catch(e => {
+        console.log(e)
+      })
+    },
+    deleteArticle (item, index) {
+      this.axios.post(api.deleteArticle, {
+        id: item._id
+      }).then(res => {
+        if (res.status === 200) {
+          this.$message.success('删除成功！')
+          this.currentItem.articleList.splice(index, 1)
+        } else {
+          this.$message.error('删除失败！')
+        }
+      }).catch(e => {
+
+      })
+    },
+    onEditorBlur (quill) {
+      console.log(quill)
+    },
+    onEditorFocus (quill) {
 
     },
-    onEditorFocus () {
-
-    },
-    onEditorChange () {
-
+    onEditorChange ({ quill, html, text }) {
+      setTimeout(() => {
+        this.hasSaved = false
+        this.axios.post(api.updateArticle, {
+          articleId: this.currentItem.articleList[this.currentIndex2]._id,
+          content: html
+        }).then(res => {
+          if (res.status === 200) {
+            this.hasSaved = true
+          } else {
+            this.$message.error('保存失败！')
+          }
+        }).catch(e => {
+          console.log(e)
+        })
+      }, 2000)
     }
   }
 }
@@ -264,6 +424,7 @@ export default {
   height: 100%;
   max-width: 100vw;
   max-height: 100vh;
+  overflow: hidden;
   .left{
     position: relative;
     height: 100%;
@@ -448,6 +609,8 @@ export default {
       .wzlb .now{
         border-left-color: #ec7259;
         background-color: #e6e6e6;
+      }
+      .wzlb {
         .title{
           margin-right: 40px;
           color: #333;
@@ -477,8 +640,10 @@ export default {
     width: 70%;
     text-align: left;
     height: 100%;
+    overflow: auto;
     ._3edit{
       position: relative;
+      height: 100vh;
     }
   }
   .notes{
