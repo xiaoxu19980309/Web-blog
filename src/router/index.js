@@ -14,6 +14,9 @@ import Recommendation from '@/components/interest/Recommendation'
 import Moments from '@/components/interest/Moments'
 import User from '@/components/interest/User'
 import Article from '@/components/Article'
+import Setting from '@/components/Setting'
+import Basic from '@/components/setting/Basic'
+import Profile from '@/components/setting/Profile'
 
 Vue.use(Router)
 const vm = new Vue()
@@ -97,6 +100,22 @@ const router = new Router({
           path: '/message/others',
           name: 'Others',
           component: Others
+        }]
+      },
+      {
+        path: '/setting',
+        name: 'Setting',
+        component: Setting,
+        redirect: '/setting/basic',
+        children: [{
+          path: '/setting/basic',
+          name: 'Basic',
+          component: Basic
+        },
+        {
+          path: '/setting/profile',
+          name: 'Profile',
+          component: Profile
         }]
       },
       {

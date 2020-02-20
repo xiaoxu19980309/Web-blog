@@ -45,8 +45,59 @@
         <el-button type="text" v-if="!isLogin" class="color999 marginX15" @click="handleClick(2)">登录</el-button>
         <el-button round v-if="!isLogin" class="marginX15" @click="handleClick(3)">注册</el-button>
         <span v-if="isLogin" class="paddingX10">{{username}},欢迎您！</span>
+        <el-popover
+          placement="bottom"
+          trigger="hover">
+            <ul>
+              <li>
+                <el-button type="text" style="color: #666;width: 100%;padding:12px;"
+                onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'"
+                @click="handleClick(11)">
+                  <i class="iconfont icon-character" style="margin-right: 8px"></i>我的主页
+                </el-button>
+              </li>
+              <li>
+                <el-button type="text" style="color: #666;width: 100%"
+                onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'"
+                @click="handleClick(12)">
+                  <i class="iconfont icon-shoucang" style="margin-right: 8px"></i>收藏的文章
+                </el-button>
+              </li>
+              <li>
+                <el-button type="text" style="color: #666;width: 100%"
+                onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'"
+                @click="handleClick(13)">
+                  <i class="iconfont icon-aixin" style="margin-right: 8px"></i>喜欢的文章
+                </el-button>
+              </li>
+              <li>
+                <el-button type="text" style="color: #666;width: 100%"
+                onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'"
+                @click="handleClick(14)">
+                  <i class="iconfont icon-shezhi" style="margin-right: 8px"></i>设置
+                </el-button>
+              </li>
+              <li>
+                <el-button type="text" style="color: #666;width: 100%"
+                onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'"
+                @click="handleClick(15)">
+                  <i class="iconfont icon-ziyuan" style="margin-right: 8px"></i>帮助和反馈
+                </el-button>
+              </li>
+              <li>
+                <el-button type="text" style="color: #666;width: 100%"
+                onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'"
+                @click="handleClick(16)">
+                  <i class="iconfont icon-tuichu" style="margin-right: 8px"></i>退出
+                </el-button>
+              </li>
+            </ul>
+          <div slot="reference" class="_divhover _divhoverbg disinblock paddingX10">
+            <img src="./assets/logo.png" alt="" class="iconbtn2" style="vertical-align: middle">
+            <i class="el-icon-caret-bottom"></i>
+          </div>
+        </el-popover>
         <el-button round type="primary" @click="handleClick(4)">写文章</el-button>
-        <el-button type="text" v-if="isLogin" class="colorOther" @click="handleClick(5)">退出</el-button>
       </div>
     </el-header>
     <el-main :class="[{'margin10X': isArticle}]">
@@ -169,6 +220,12 @@ export default {
           break
         case 10: this.$router.push({path: '/message/likepraise'})
           this.activePart = 3
+          break
+        case 14: this.$router.push({path: '/setting/basic'})
+          break
+        case 16: if (sessionStorage.getItem('user')) sessionStorage.removeItem('user')
+          this.$message.success('您已退出登录！')
+          this.$router.push({path: '/login'})
           break
       }
     },
