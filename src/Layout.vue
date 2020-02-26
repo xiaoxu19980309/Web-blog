@@ -93,7 +93,7 @@
               </li>
             </ul>
           <div slot="reference" class="_divhover _divhoverbg disinblock paddingX10">
-            <img src="./assets/logo.png" alt="" class="iconbtn2" style="vertical-align: middle">
+            <img :src="imgurl" alt="" class="iconbtn2" style="vertical-align: middle">
             <i class="el-icon-caret-bottom"></i>
           </div>
         </el-popover>
@@ -129,7 +129,9 @@ export default {
       search: '',
       isLogin: false,
       username: '',
-      isArticle: false
+      isArticle: false,
+      userId: '',
+      imgurl: ''
     }
   },
   mounted () {
@@ -137,10 +139,10 @@ export default {
     // this.getTest()
     if (sessionStorage.getItem('user')) {
       this.isLogin = true
-      this.username = JSON.parse(sessionStorage.getItem('user')).username
-    } else {
-      this.$message.error('登录失效！')
-      this.$router.replace('/login')
+      let user = JSON.parse(sessionStorage.getItem('user'))
+      this.username = user.username
+      this.userId = user.userId
+      this.imgurl = user.img
     }
     this.heightTop()
   },
@@ -221,7 +223,11 @@ export default {
         case 10: this.$router.push({path: '/message/likepraise'})
           this.activePart = 3
           break
+        case 11: this.$router.push({path: '/user', query: { userId: this.userId }})
+          break
         case 14: this.$router.push({path: '/setting/basic'})
+          break
+        case 15: this.$router.push({path: '/help'})
           break
         case 16: if (sessionStorage.getItem('user')) sessionStorage.removeItem('user')
           this.$message.success('您已退出登录！')
@@ -286,10 +292,11 @@ body{
   color: #333;
   overflow: inherit;
   text-align: center;
-  padding: 30px 0;
+  padding: 30px 0 0;
+  margin-bottom: 30px;
 }
 .el-container{
-  height: 100%;
+  /* height: 100%; */
   padding-top: 60px!important;
 }
 body > .el-container {

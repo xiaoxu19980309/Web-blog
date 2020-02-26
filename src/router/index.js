@@ -4,16 +4,21 @@ import Login from '@/components/Login'
 import Layout from '@/Layout'
 import Home from '@/components/Home'
 import Write from '@/components/Write'
-import Interest from '@/components/Interest'
+import Article from '@/components/Article'
+import Help from '@/components/Help'
+
 import Message from '@/components/Message'
 import Comments from '@/components/message/Comments'
 import Follows from '@/components/message/Follows'
 import LikePraise from '@/components/message/LikePraise'
 import Others from '@/components/message/Others'
+
+import Interest from '@/components/Interest'
 import Recommendation from '@/components/interest/Recommendation'
 import Moments from '@/components/interest/Moments'
 import User from '@/components/interest/User'
-import Article from '@/components/Article'
+import Collection from '@/components/interest/Collection'
+
 import Setting from '@/components/Setting'
 import Basic from '@/components/setting/Basic'
 import Profile from '@/components/setting/Profile'
@@ -39,6 +44,11 @@ const router = new Router({
       path: '/write',
       name: 'Write',
       component: Write
+    },
+    {
+      path: '/help',
+      name: 'Help',
+      component: Help
     },
     {
       path: '/',
@@ -74,6 +84,11 @@ const router = new Router({
           path: '/interest/user',
           name: 'User',
           component: User
+        },
+        {
+          path: '/interest/collection',
+          name: 'Collection',
+          component: Collection
         }]
       },
       {

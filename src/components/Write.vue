@@ -104,7 +104,8 @@
                   <span>
                     <ul class="ul_demo">
                       <li>
-                        <el-button type="text" style="color: #666;width: 100%;padding:12px;" onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'">
+                        <el-button type="text" style="color: #666;width: 100%;padding:12px;"
+                        onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'" @click="issueNow(item, index)">
                           <i class="iconfont icon-zhuanfa1" style="margin-right: 8px"></i>直接发布
                         </el-button>
                       </li>
@@ -120,9 +121,16 @@
                           <i class="el-icon-delete" style="margin-right: 8px"></i>删除文章
                         </el-button>
                       </li>
-                      <li>
-                        <el-button type="text" style="color: #666;width: 100%" onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'">
+                      <li v-if="!item.noReprint">
+                        <el-button type="text" style="color: #666;width: 100%"
+                        onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'" @click="setting(item)">
                           <i class="iconfont icon-iconforbidden" style="margin-right: 8px"></i>设置禁止转载
+                        </el-button>
+                      </li>
+                      <li v-else>
+                        <el-button type="text" style="color: #666;width: 100%"
+                        onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'" @click="setting(item)">
+                          <i class="iconfont icon-iconforbidden" style="margin-right: 8px"></i>取消禁止转载
                         </el-button>
                       </li>
                     </ul>
@@ -214,7 +222,8 @@ export default {
       },
       collections: [],
       articleTitle: '无标题文章',
-      hasSaved: true
+      hasSaved: true,
+      countNum: 0
     }
   },
   watch: {
@@ -228,6 +237,10 @@ export default {
     },
     articleTitle (newVal, oldVal) {
       console.log(oldVal, '///', newVal, '////')
+      if (this.countNum === 0) {
+        this.countNum++
+        return
+      }
       this.currentItem.articleList[this.currentIndex2].title = newVal
       setTimeout(() => {
         this.hasSaved = false
@@ -366,8 +379,8 @@ export default {
         content: ''
       }).then(res => {
         if (res.status === 200) {
-          this.articles.splice(type === 1 ? 0 : this.articles.length - 1, 0, {title: '无标题文章'})
-          console.log(this.articles, 'ads')
+          this.currentItem.articleList.splice(type === 1 ? 0 : this.currentItem.articleList.length - 1, 0, {title: '无标题文章'})
+          console.log(this.currentItem.articleList, 'ads')
           this.articleTitle = '无标题文章'
           this.$message.success('新建成功！')
         } else {
@@ -377,6 +390,7 @@ export default {
         console.log(e)
       })
     },
+    // 删除文章
     deleteArticle (item, index) {
       this.axios.post(api.deleteArticle, {
         id: item._id
@@ -391,6 +405,41 @@ export default {
 
       })
     },
+    // 发布
+    issueNow (item, index) {
+      this.axios.post(api.insertIssue, {
+        userId: item._id,
+        articleId: item._id,
+        title: this.articleTitle,
+        content: this.editContent
+      }).then(res => {
+        if (res.status === 200) {
+          this.$message.success('发布成功！')
+          this.currentItem.articleList.splice(index, 1)
+          this.articleTitle = ''
+          this.editContent = ''
+        } else {
+          this.$message.error('发布失败！')
+        }
+      }).catch(e => {
+
+      })
+    },
+    // 设置禁止转载
+    setting (item) {
+      this.axios.post(api.updateArticle, {
+        articleId: item._id,
+        no_reprint: !item.noReprint
+      }).then(res => {
+        if (res.status === 200) {
+          this.$message.success('设置成功！')
+        } else {
+          this.$message.error('设置失败！')
+        }
+      }).catch(e => {
+        console.log(e)
+      })
+    },
     onEditorBlur (quill) {
       console.log(quill)
     },
@@ -398,6 +447,10 @@ export default {
 
     },
     onEditorChange ({ quill, html, text }) {
+      if (this.countNum === 1) {
+        this.countNum++
+        return
+      }
       setTimeout(() => {
         this.hasSaved = false
         this.axios.post(api.updateArticle, {

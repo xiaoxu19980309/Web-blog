@@ -3,8 +3,8 @@
     <el-form ref="form" :model="form" label-width="120px">
       <el-form-item label="性别">
         <el-radio-group v-model="form.sex">
-          <el-radio label="男"></el-radio>
-          <el-radio label="女"></el-radio>
+          <el-radio label="1">男</el-radio>
+          <el-radio label="2">女</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="个人简介">
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import { api } from '@/utils/api'
 export default {
   name: 'Profile',
   data () {
@@ -29,15 +30,49 @@ export default {
         sex: '',
         description: '',
         personNet: ''
-      }
+      },
+      userId: '',
+      user: {}
+    }
+  },
+  mounted () {
+    if (sessionStorage.getItem('user')) {
+      this.userId = JSON.parse(sessionStorage.getItem('user')).userId
+      this.getInfo()
     }
   },
   methods: {
-    changePhoto () {
-
+    getInfo () {
+      this.axios.post(api.getProInfo, {
+        id: this.userId
+      }).then(res => {
+        if (res.status === 200) {
+          this.user = res.data[0]
+          this.form.sex = res.data[0].sex
+          this.form.description = res.data[0].description
+          this.form.personNet = res.data[0].net
+        } else {
+          this.$message.error('获取个人信息失败！')
+        }
+      }).catch(e => {
+        console.log(e)
+      })
     },
     onSave () {
-
+      this.axios.post(api.changePro, {
+        id: this.userId,
+        sex: this.form.sex,
+        description: this.form.description,
+        net: this.form.personNet
+      }).then(res => {
+        if (res.status === 200) {
+          this.$message.success('保存成功！')
+        } else {
+          this.$message.error('保存失败！')
+        }
+      }).catch(e => {
+        console.log(e)
+      })
     }
   }
 }

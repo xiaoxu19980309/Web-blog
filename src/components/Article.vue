@@ -1,6 +1,6 @@
 <template>
   <div class="_article textAlignLeft colorf9bg">
-    <h1 class="_titleText">真当Flutter不能热更新？QQ团队开源动态化Flutter</h1>
+    <h1 class="_titleText">{{title}}</h1>
     <div class="info">
       <div class="content">
         <a href="" target="_blank">
@@ -14,14 +14,14 @@
             <a class="btn btn-hollow">关注</a>
           </div>
           <div class="Flex color96">
-            <span class="marginRight10">2020.02.11 20:05:55</span>
-            <span class="marginRight10">字数 3,189</span>
+            <span class="marginRight10">{{time}}</span>
+            <span class="marginRight10">字数 {{length}}</span>
             <span>阅读 156</span>
           </div>
         </div>
       </div>
     </div>
-    <div class="article-content"></div>
+    <div class="article-content" v-html="content"></div>
     <div class="article-bottom dfaic">
       <div class="dfaic">
         <div :class="['iconbtn','marginRight10',{'active': isActive1}]" @click="clickLike(1)">
@@ -64,15 +64,41 @@
 </template>
 
 <script>
+import { api } from '@/utils/api'
+import { countText } from '@/utils/common'
 export default {
   name: 'Artical',
   data () {
     return {
       isActive1: false,
-      isActive2: false
+      isActive2: false,
+      articleId: '',
+      title: '',
+      content: '',
+      time: '',
+      length: ''
     }
   },
+  mounted () {
+    let keys = this.$route.query
+    this.articleId = keys.articleId
+    this.getArticle()
+  },
   methods: {
+    getArticle () {
+      this.axios.post(api.getArticle, {articleId: this.articleId}).then(res => {
+        if (res.status === 200) {
+          this.title = res.data.title
+          this.content = res.data.content
+          this.time = res.data.gmt_create
+          this.length = countText(this.content)
+        } else {
+          this.$message.error('获取文章信息失败！')
+        }
+      }).catch(e => {
+        console.log(e)
+      })
+    },
     clickLike (num) {
       if (num === 1) {
         if (!this.isActive1 && this.isActive2) {

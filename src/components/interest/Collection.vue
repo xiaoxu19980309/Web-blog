@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div v-loading.lock="isLoading">
     <div class="main-top">
       <a href="" target="_blank" class="avatar-collection">
-        <img :src="user.photo?user.photo:defaultImg" alt="">
+        <img src="../../assets/logo.png" alt="">
       </a>
-      <a class="btn btn-default following">
+      <!-- <a href="" class="btn btn-default following">
         <span v-show="hasFollow">
           <i class="el-icon-check"></i>
           <span>已关注</span>
@@ -16,22 +16,22 @@
       </a>
       <a href="" class="btn btn-success">
         <i class="el-icon-plus"></i>
-        <span>发简信</span>
-      </a>
-      <!-- <a :href="'/#/user?id='+userId" target="_blank" class="btn btn-hollow">
+        <span>关注</span>
+      </a> -->
+      <a :href="'/#/user?id='+userId" target="_blank" class="btn btn-hollow">
         专题主页
         <i class="el-icon-arrow-right"></i>
-      </a> -->
-      <!-- <a class="btn btn-hollow" @click="showDialog = true">投稿</a> -->
+      </a>
+      <a class="btn btn-hollow" @click="showDialog = true">投稿</a>
       <div class="title">
-        <a href="" target="_blank" class="name">{{user.nickname}}</a>
+        <a href="" target="_blank" class="name">诗</a>
       </div>
       <div class="info">
-         <!-- 收录了761536篇文章 · 2388728人关注 -->
-         写了152500字，获得了57170个喜欢
+        <a href="" target="_blank">微作</a>
+         编 · 收录了761536篇文章 · 2388728人关注
       </div>
     </div>
-    <el-tabs v-model="activeName" @tab-click="handleClick" v-loading.lock="isLoading">
+    <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane name="first">
         <span slot="label"><i class="iconfont icon-wenzhang2 marginX5"></i>最新发布</span>
         <ul class="note-list">
@@ -122,14 +122,12 @@
 
 <script>
 import nothing from '@/assets/nofind.png'
-import defaultImg from '@/assets/default.jpg'
 import { api } from '@/utils/api'
 export default {
-  name: 'User',
+  name: 'Collection',
   data () {
     return {
       nothing,
-      defaultImg,
       isLoading: false,
       activeName: 'first',
       userId: '',
@@ -138,17 +136,13 @@ export default {
       newPublish: [],
       hasmore1: false,
       hasmore2: false,
-      hasmore3: false,
-      user: {}
+      hasmore3: false
     }
   },
   mounted () {
     let keys = this.$route.query
     this.userId = keys.userId
-    this.$nextTick(() => {
-      this.getInfo()
-      this.getPage()
-    })
+    this.getPage()
   },
   methods: {
     loading () {
@@ -159,19 +153,6 @@ export default {
     },
     handleClick () {
       this.loading()
-    },
-    getInfo () {
-      this.axios.post(api.getProInfo, {
-        id: this.userId
-      }).then(res => {
-        if (res.status === 200) {
-          this.user = res.data[0]
-        } else {
-          this.$message.error('获取个人信息失败!')
-        }
-      }).catch(e => {
-        console.log(e)
-      })
     },
     getPage () {
       this.isLoading = true
