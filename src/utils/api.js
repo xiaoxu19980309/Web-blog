@@ -13,6 +13,15 @@ const api = {
   insertIssue: '/api/article/insertIssue', // 发布文章
   getHomePage: '/api/article/getHomePage', // 获取个人主页
   getArticle: '/api/article/getArticle', // 获取文章详情
+  getComments: '/api/article/getComments', // 获取文章评论
+  insertComment: '/api/article/insertComment', // 发表评论
+  deleteComment: '/api/article/deleteComment', // 删除评论
+  getLikes: '/api/article/getLikes', // 获取喜欢状态
+  insertLikes: '/api/article/insertLikes', // 发表喜欢
+  updateLikes: '/api/article/updateLikes', // 更新喜欢
+  insertCollect: '/api/article/insertCollect', // 收藏文章
+  getStores: '/api/article/getStores', // 获取收藏列表
+  deleteStore: '/api/article/deleteStore', // 取消收藏
   changePro: '/api/user/changePro', // 修改个人信息
   changeBasic: '/api/user/changeBasic', // 修改基本信息
   getProInfo: '/api/user/getProInfo', // 获取个人信息

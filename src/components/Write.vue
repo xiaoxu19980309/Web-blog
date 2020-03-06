@@ -214,6 +214,7 @@ export default {
       dialogVisible2: false, // 弹窗修改文集名
       hasArticle: false, // 没有文章
       editContent: '',
+      editContentText: '',
       currentItem: {},
       currentIndex1: 0,
       currentIndex2: 0,
@@ -393,7 +394,8 @@ export default {
     // 删除文章
     deleteArticle (item, index) {
       this.axios.post(api.deleteArticle, {
-        id: item._id
+        id: item._id,
+        collectionId: item.collectionId
       }).then(res => {
         if (res.status === 200) {
           this.$message.success('删除成功！')
@@ -411,7 +413,8 @@ export default {
         userId: item._id,
         articleId: item._id,
         title: this.articleTitle,
-        content: this.editContent
+        content: this.editContent,
+        content_text: this.editContentText
       }).then(res => {
         if (res.status === 200) {
           this.$message.success('发布成功！')
@@ -451,11 +454,13 @@ export default {
         this.countNum++
         return
       }
+      this.editContentText = text
       setTimeout(() => {
         this.hasSaved = false
         this.axios.post(api.updateArticle, {
           articleId: this.currentItem.articleList[this.currentIndex2]._id,
-          content: html
+          content: html,
+          content_text: text
         }).then(res => {
           if (res.status === 200) {
             this.hasSaved = true

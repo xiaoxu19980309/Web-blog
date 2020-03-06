@@ -165,7 +165,7 @@ export default {
         id: this.userId
       }).then(res => {
         if (res.status === 200) {
-          this.user = res.data[0]
+          this.user = res.data
         } else {
           this.$message.error('获取个人信息失败!')
         }

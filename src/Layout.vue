@@ -93,7 +93,8 @@
               </li>
             </ul>
           <div slot="reference" class="_divhover _divhoverbg disinblock paddingX10">
-            <img :src="imgurl" alt="" class="iconbtn2" style="vertical-align: middle">
+            <img v-if="imgurl" :src="imgurl" alt="" class="iconbtn2" style="vertical-align: middle">
+            <img v-else :src="defaultImg" alt="" class="iconbtn2" style="vertical-align: middle">
             <i class="el-icon-caret-bottom"></i>
           </div>
         </el-popover>
@@ -118,6 +119,7 @@
 <script>
 import { Container } from 'element-ui'
 import { api } from '@/utils/api'
+import defaultImg from '@/assets/default.jpg'
 export default {
   name: 'Layout',
   components: {
@@ -125,6 +127,7 @@ export default {
   },
   data () {
     return {
+      defaultImg,
       activePart: 1,
       search: '',
       isLogin: false,
@@ -288,7 +291,7 @@ body{
   margin-left: auto;
   margin-right: auto;
   width: 960px;
-  background-color: #fff;
+  /* background-color: #fff; */
   color: #333;
   overflow: inherit;
   text-align: center;

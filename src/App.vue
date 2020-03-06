@@ -11,7 +11,6 @@ export default {
     if (sessionStorage.getItem('user')) {
 
     } else {
-      this.$message.error('登录失效！')
       this.$router.replace('/login')
     }
   }

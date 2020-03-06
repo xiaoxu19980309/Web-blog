@@ -51,9 +51,12 @@ export default {
     getInfo () {
       this.axios.post(api.getProInfo, {id: this.userId}).then(res => {
         if (res.status === 200) {
-          this.imgurl = res.data[0].photo
-          this.form.nickname = res.data[0].nickname
-          this.form.phone = res.data[0].phone
+          this.imgurl = res.data.photo
+          this.form.nickname = res.data.nickname
+          this.form.phone = res.data.phone
+          let user = JSON.parse(sessionStorage.getItem('user'))
+          user.img = res.data.photo
+          sessionStorage.setItem('user', JSON.stringify(user))
         } else {
           this.$message.error('获取基本信息失败！')
         }
