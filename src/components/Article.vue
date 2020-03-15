@@ -2,7 +2,7 @@
   <div class="_article textAlignLeft colorf9bg">
     <div class="bgcolorWhite" style="padding: 20px 24px">
       <h1 class="_titleText">{{title}}</h1>
-      <div class="info">
+      <div class="info margin10X">
         <div class="content">
           <a :href="'/#/user?userId='+user._id" target="_blank">
             <img v-if="user.photo" :src="user.photo" alt="" class="_13d2eh">
@@ -26,9 +26,10 @@
       <div class="article-content" v-html="content"></div>
       <div class="article-bottom dfaic">
         <div class="dfaic">
-          <div :class="['iconbtn','marginRight10',{'active': isActive1}]" @click="clickLike(1)">
+          <div :class="['iconbtn',{'active': isActive1}]" @click="clickLike(1)">
             <i class="iconfont icon-dianzan1"></i>
           </div>
+          <div class="marginRight10">0人点赞</div>
           <div :class="['iconbtn',{'active': isActive2}]"  @click="clickLike(2)">
             <i class="iconfont icon-dislike-b"></i>
           </div>
@@ -38,10 +39,7 @@
             <i class="iconfont icon-wenzhang2"></i>
             <span>日记本</span>
           </a>
-          <el-popover
-            placement="top"
-            trigger="click"
-          >
+          <el-popover placement="top" trigger="click">
           <ul>
             <li><el-button type="text" @click="collectArticle">收藏文章</el-button></li>
           </ul>
@@ -56,7 +54,7 @@
       <div class="dfaic">
         <img :src="imgurl" class="iconbtn iconbtn2 marginX10" alt="">
         <el-input type="textarea" placeholder="写下你的评论" style="display: flex"
-        :rows="3" :autosize="{ minRows: 3, maxRows: 5}" v-model="texta" :maxlength="1000" @focus="btnshow = true"></el-input>
+        :rows="3" :autosize="{ minRows: 3, maxRows: 3}" v-model="texta" :maxlength="1000" @focus="btnshow = true"></el-input>
       </div>
       <div class="pRight margin10X" v-show="btnshow">
         <el-button type="danger" round class="marginX10" @click="comment(1)">发布</el-button>
@@ -64,31 +62,70 @@
       </div>
       <div class="comment-list" style="margin-top: 48px">
         <p>全部评论<span style="margin-left: 6px">{{commentList.length}}</span></p>
-        <div v-for="(item, index) in commentList" :key="index" class="list">
-          <img v-if="item.user[0].photo" :src="item.user[0].photo" alt="">
-          <img v-else :src="defaultImg" alt="">
-          <div class="content">
-            <div>{{item.user[0].nickname}}</div>
-            <div class="timetext">{{item.gmt_create}}</div>
-            <div class="comment-text">{{item.content}}</div>
-            <div class="click-btn">
-              <div style="display: block">
-                <span class="comment-icon">
-                  <i class="iconfont icon-dianzan"></i>
-                  <span>点赞</span>
-                </span>
-                <span class="marginX15 comment-icon">
-                  <i class="iconfont icon-ziyuan"></i>
-                  <span>回复</span>
-                </span>
+        <div v-if="commentList.length!=0">
+          <div v-for="(item, index) in commentList" :key="index" class="list">
+            <img v-if="item.userId.photo" :src="item.userId.photo" alt="">
+            <img v-else :src="defaultImg" alt="">
+            <div class="content">
+              <div>{{item.userId.nickname}}
+                <span  v-if="isWriter" class="colorOther disinblock borderreac fontSize12 marginX5">作者</span>
               </div>
-              <div>
-                <div class="comment-icon" v-if="isWriter" @click="deleteComment(item)">
-                  <i class="iconfont icon-iconfontshanchu4"></i>
-                  <span>删除</span>
+              <div class="timetext">{{item.gmt_create}}</div>
+              <div class="comment-text">{{item.content}}</div>
+              <div class="click-btn">
+                <div style="display: block">
+                  <span class="comment-icon">
+                    <i class="iconfont icon-dianzan"></i>
+                    <span>点赞</span>
+                  </span>
+                  <span class="marginX15 comment-icon" @click="replyComment(item)">
+                    <i class="iconfont icon-ziyuan"></i>
+                    <span>回复</span>
+                  </span>
+                </div>
+                <div>
+                  <div class="comment-icon" v-if="isWriter" @click="deleteComment(item)">
+                    <i class="iconfont icon-iconfontshanchu4"></i>
+                    <span>删除</span>
+                  </div>
                 </div>
               </div>
+              <div v-for="(item2, index) in item.replyList" :key="index">
+                <div class="_3U4Smb margin10X">
+                  <img v-if="item2.userId.photo" :src="item2.userId.photo" alt="">
+                  <img v-else :src="defaultImg" alt="">
+                  <div class="marginX10">
+                    <span>{{item2.userId.nickname}}<span  v-if="isWriter" class="colorOther disinblock borderreac fontSize12 marginX5">作者</span></span>
+                    <div class="timetext">{{item2.gmt_create}}</div>
+                  </div>
+                </div>
+                <div class="comment-text">{{item2.content}}</div>
+                <div style="margin-top: 10px">
+                  <div class="comment-icon" v-if="isWriter" @click="deleteReply(item,item2)">
+                    <i class="iconfont icon-iconfontshanchu4"></i>
+                    <span>删除</span>
+                  </div>
+                </div>
+              </div>
+              <div class="reply margin15X">
+                <transition name="my">
+                  <div v-show="replyShow">
+                    <el-input placeholder="写下你的评论..." type="textarea" :maxlength="1000" v-model="replyText"
+                    :rows="3" :autosize="{ minRows: 3, maxRows: 5}"></el-input>
+                    <div class="pRight margin10X">
+                      <el-button type="danger" round class="marginX10" @click="reply()">发布</el-button>
+                      <el-button round @click="replyShow = false">取消</el-button>
+                    </div>
+                  </div>
+                </transition>
+              </div>
             </div>
+          </div>
+        </div>
+        <div v-else>
+          <div class="find-none">
+            <img :src="nothing" alt="找不到结果">
+            <div>目前还没有评论~</div>
           </div>
         </div>
       </div>
@@ -116,16 +153,19 @@
 import { api } from '@/utils/api'
 import { countText } from '@/utils/common'
 import defaultImg from '@/assets/default.jpg'
+import nothing from '@/assets/nofind.png'
 export default {
   name: 'Artical',
   data () {
     return {
       defaultImg,
-      isActive1: false,
-      isActive2: false,
-      btnshow: false,
+      nothing,
+      isActive1: false, // 喜欢
+      isActive2: false, // 不喜欢
+      btnshow: false, // 评论按钮是否显示
       hasLikes: false,
-      isWriter: false,
+      isWriter: false, // 是否是作者
+      replyShow: false, // 回复按钮是否显示
       articleId: '',
       userId: '',
       title: '',
@@ -136,7 +176,9 @@ export default {
       textb: '',
       imgurl: '',
       commentList: [],
-      user: {}
+      user: {},
+      currentComment: {},
+      replyText: ''
     }
   },
   mounted () {
@@ -152,7 +194,7 @@ export default {
       this.content = res.data.content
       this.time = res.data.gmt_create
       this.length = countText(this.content)
-      this.user = res.data.user[0]
+      this.user = res.data.userId
       if (this.user._id === this.userId) {
         this.isWriter = true
       }
@@ -251,13 +293,64 @@ export default {
 
       })
     },
+    reply () {
+      console.log(this.currentComment, 'comment')
+      this.axios.post(api.insertReply, {
+        commentId: this.currentComment._id,
+        userId: this.userId,
+        content: this.replyText
+      }).then(res => {
+        if (res.status === 200) {
+          this.$message.success('回复成功！')
+          this.replyShow = false
+          this.getComments().then(res => {
+            this.commentList = res.data
+          }).catch(e => {
+
+          })
+        } else {
+          this.$message.error('回复失败！')
+        }
+      }).catch(e => {
+        console.log(e)
+      })
+    },
+    replyComment (item) {
+      this.replyShow = true
+      this.replyText = ''
+      this.currentComment = item
+    },
     deleteComment (item) {
-      this.$confirm('确定删除该评论？', '提示', {
+      this.$confirm('确定删除该评论？(包括评论下的回复)', '提示', {
         confirmTextButton: '确定',
         cancelTextButton: '取消',
         type: 'warning'
       }).then(res => {
         this.axios.post(api.deleteComment, {id: item._id}).then(res => {
+          if (res.status === 200) {
+            this.$message.success('删除成功！')
+            this.getComments().then(ress => {
+              this.commentList = ress.data
+            }).catch(e => {
+
+            })
+          } else {
+            this.$message.error('删除失败！')
+          }
+        }).catch(e => {
+
+        })
+      }).catch(e => {
+
+      })
+    },
+    deleteReply (item, item2) {
+      this.$confirm('确定删除该回复？', '提示', {
+        confirmTextButton: '确定',
+        cancelTextButton: '取消',
+        type: 'warning'
+      }).then(res => {
+        this.axios.post(api.deleteReply, {commentId: item._id, replyId: item2._id}).then(res => {
           if (res.status === 200) {
             this.$message.success('删除成功！')
             this.getComments().then(ress => {

@@ -101,6 +101,9 @@ export default {
       }).then(res => {
         if (res.status === 200) {
           this.$message.success('保存成功！')
+          setTimeout(() => {
+            location.reload()
+          }, 1000)
         } else {
           this.$message.error('保存失败!')
         }

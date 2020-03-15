@@ -110,11 +110,6 @@
                         </el-button>
                       </li>
                       <li>
-                        <el-button type="text" style="color: #666;width: 100%;padding:12px;" onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'">
-                          <i class="iconfont icon-naozhong" style="margin-right: 8px"></i>定时发布
-                        </el-button>
-                      </li>
-                      <li>
                         <el-button type="text" style="color: #666;width: 100%;padding:12px;"
                         onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'"
                         @click="deleteArticle(item, index)">
@@ -352,7 +347,7 @@ export default {
     },
     deleteClass (item) {
       let _this = this
-      this.$confirm('确定删除该文集？', '提示', {
+      this.$confirm('确定删除该文集？(删除文集该文集下的所有文章都将被删除)', '提示', {
         confirmTextButton: '确定',
         cancelTextButton: '取消',
         type: 'warning'
@@ -384,6 +379,7 @@ export default {
           console.log(this.currentItem.articleList, 'ads')
           this.articleTitle = '无标题文章'
           this.$message.success('新建成功！')
+          this.getList()
         } else {
           this.$message.error('新建失败!')
         }

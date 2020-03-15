@@ -42,7 +42,7 @@
               </a> -->
               <div class="content">
                 <a :href="'/#/article?articleId='+item._id" target="_blank" class="title">{{item.title}}</a>
-                <p class="abstract" v-text="item.content"></p>
+                <p class="abstract" v-text="item.content_text"></p>
                 <div class="meta">
                   <a href="" target="_blank"><i class="iconfont icon-yanjing marginX5"></i>9</a>
                   <a href="" target="_blank"><i class="iconfont icon-pinglun1 marginX5"></i>0</a>
@@ -180,8 +180,8 @@ export default {
         if (res.status === 200) {
           this.newPublish = res.data
           this.newPublish.forEach(item => {
-            if (item.content.length > 40) {
-              item.content = item.content.substr(0, 40) + '...'
+            if (item.content_text.length > 40) {
+              item.content_text = item.content_text.substr(0, 80) + '...'
             }
           })
         } else {

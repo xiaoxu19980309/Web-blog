@@ -15,7 +15,9 @@ const api = {
   getArticle: '/api/article/getArticle', // 获取文章详情
   getComments: '/api/article/getComments', // 获取文章评论
   insertComment: '/api/article/insertComment', // 发表评论
+  insertReply: '/api/article/insertReply', // 发表回复
   deleteComment: '/api/article/deleteComment', // 删除评论
+  deleteReply: '/api/article/deleteReply', // 删除回复
   getLikes: '/api/article/getLikes', // 获取喜欢状态
   insertLikes: '/api/article/insertLikes', // 发表喜欢
   updateLikes: '/api/article/updateLikes', // 更新喜欢
