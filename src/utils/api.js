@@ -19,6 +19,7 @@ const api = {
   deleteComment: '/api/article/deleteComment', // 删除评论
   deleteReply: '/api/article/deleteReply', // 删除回复
   getLikes: '/api/article/getLikes', // 获取喜欢状态
+  getLikeCount: '/api/article/getLikeCount', // 获取喜欢文章的人数
   insertLikes: '/api/article/insertLikes', // 发表喜欢
   updateLikes: '/api/article/updateLikes', // 更新喜欢
   insertCollect: '/api/article/insertCollect', // 收藏文章

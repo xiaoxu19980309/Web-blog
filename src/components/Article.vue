@@ -29,7 +29,7 @@
           <div :class="['iconbtn',{'active': isActive1}]" @click="clickLike(1)">
             <i class="iconfont icon-dianzan1"></i>
           </div>
-          <div class="marginRight10">0人点赞</div>
+          <div class="marginX10">{{countNum}}人点赞</div>
           <div :class="['iconbtn',{'active': isActive2}]"  @click="clickLike(2)">
             <i class="iconfont icon-dislike-b"></i>
           </div>
@@ -178,7 +178,8 @@ export default {
       commentList: [],
       user: {},
       currentComment: {},
-      replyText: ''
+      replyText: '',
+      countNum: 0
     }
   },
   mounted () {
@@ -193,17 +194,14 @@ export default {
       this.title = res.data.title
       this.content = res.data.content
       this.time = res.data.gmt_create
+      this.countNum = res.data.likesCount
       this.length = countText(this.content)
       this.user = res.data.userId
+      this.commentList = res.data.commentList
       if (this.user._id === this.userId) {
         this.isWriter = true
       }
     }).then(() => {
-      this.getComments().then(res => {
-        this.commentList = res.data
-      }).catch(e => {
-
-      })
       this.getLike().then(res => {
         if (res.data) {
           this.hasLikes = true
@@ -263,6 +261,17 @@ export default {
         })
       })
     },
+    getlikeCount () {
+      this.axios.post(api.getLikeCount, {articleId: this.articleId}).then(res => {
+        if (res.status === 200) {
+          this.countNum = res.data
+        } else {
+          this.$message.error('获取统计人数失败！')
+        }
+      }).catch(e => {
+
+      })
+    },
     comment (type) {
       let param = {
         userId: this.userId,
@@ -294,7 +303,6 @@ export default {
       })
     },
     reply () {
-      console.log(this.currentComment, 'comment')
       this.axios.post(api.insertReply, {
         commentId: this.currentComment._id,
         userId: this.userId,
@@ -377,21 +385,26 @@ export default {
             this.axios.post(api.insertLikes, {userId: this.userId, articleId: this.articleId, status: 1}).then(res => {
               if (res.status === 200) {
                 this.isActive1 = !this.isActive1
+                this.$message.success('操作成功！')
+                this.hasLikes = true
+                this.getlikeCount()
               } else {
                 this.$message.error('操作失败！')
               }
             }).catch(e => {
-
+              this.$message.error('操作失败！')
             })
           } else {
             this.axios.post(api.updateLikes, {userId: this.userId, articleId: this.articleId, status: this.isActive1 ? 0 : 1}).then(res => {
               if (res.status === 200) {
                 this.isActive1 = !this.isActive1
+                this.$message.success('操作成功！')
+                this.getlikeCount()
               } else {
                 this.$message.error('操作失败！')
               }
             }).catch(e => {
-
+              this.$message.error('操作失败！')
             })
           }
         }
@@ -403,21 +416,24 @@ export default {
             this.axios.post(api.insertLikes, {userId: this.userId, articleId: this.articleId, status: 2}).then(res => {
               if (res.status === 200) {
                 this.isActive2 = !this.isActive2
+                this.$message.success('操作成功！')
+                this.hasLikes = true
               } else {
                 this.$message.error('操作失败！')
               }
             }).catch(e => {
-
+              this.$message.error('操作失败！')
             })
           } else {
             this.axios.post(api.updateLikes, {userId: this.userId, articleId: this.articleId, status: this.isActive2 ? 0 : 2}).then(res => {
               if (res.status === 200) {
                 this.isActive2 = !this.isActive2
+                this.$message.success('操作成功！')
               } else {
                 this.$message.error('操作失败！')
               }
             }).catch(e => {
-
+              this.$message.error('操作失败！')
             })
           }
         }
