@@ -6,6 +6,7 @@ import Home from '@/components/Home'
 import Write from '@/components/Write'
 import Article from '@/components/Article'
 import Help from '@/components/Help'
+import BookMarks from '@/components/BookMarks'
 
 import Message from '@/components/Message'
 import Comments from '@/components/message/Comments'
@@ -137,6 +138,11 @@ const router = new Router({
         path: '/article',
         name: 'Article',
         component: Article
+      },
+      {
+        path: '/bookmarks',
+        name: 'BookMarks',
+        component: BookMarks
       }]
     }
   ]

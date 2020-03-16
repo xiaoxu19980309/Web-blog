@@ -18,13 +18,15 @@ const api = {
   insertReply: '/api/article/insertReply', // 发表回复
   deleteComment: '/api/article/deleteComment', // 删除评论
   deleteReply: '/api/article/deleteReply', // 删除回复
-  getLikes: '/api/article/getLikes', // 获取喜欢状态
-  getLikeCount: '/api/article/getLikeCount', // 获取喜欢文章的人数
-  insertLikes: '/api/article/insertLikes', // 发表喜欢
-  updateLikes: '/api/article/updateLikes', // 更新喜欢
-  insertCollect: '/api/article/insertCollect', // 收藏文章
-  getStores: '/api/article/getStores', // 获取收藏列表
-  deleteStore: '/api/article/deleteStore', // 取消收藏
+
+  getLikes: '/api/operate/getLikes', // 获取喜欢状态
+  getLikeCount: '/api/operate/getLikeCount', // 获取喜欢文章的人数
+  insertLikes: '/api/operate/insertLikes', // 发表喜欢
+  updateLikes: '/api/operate/updateLikes', // 更新喜欢
+  insertCollect: '/api/operate/insertCollect', // 收藏文章
+  getStores: '/api/operate/getStores', // 获取收藏列表
+  deleteStore: '/api/operate/deleteStore', // 取消收藏
+
   changePro: '/api/user/changePro', // 修改个人信息
   changeBasic: '/api/user/changeBasic', // 修改基本信息
   getProInfo: '/api/user/getProInfo', // 获取个人信息

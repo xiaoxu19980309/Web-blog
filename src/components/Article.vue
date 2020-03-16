@@ -35,7 +35,7 @@
           </div>
         </div>
         <div class="dfaic">
-          <a href="">
+          <a>
             <i class="iconfont icon-wenzhang2"></i>
             <span>日记本</span>
           </a>
