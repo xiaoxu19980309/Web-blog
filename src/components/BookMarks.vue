@@ -16,6 +16,7 @@
                   <p class="abstract" v-text="item.articleId.content_text"></p>
                   <div class="meta">
                     <!-- <a href="" target="_blank"><i class="iconfont icon-yanjing marginX5"></i>9</a> -->
+                    <span><a :href="'/#/user?userId='+item.userId._id" target="_blank">{{item.userId.nickname}}</a></span>
                     <a href="" target="_blank"><i class="iconfont icon-pinglun1 marginX5"></i>{{item.articleId.commentsCount}}</a>
                     <span><i class="iconfont icon-aixin1 color96 marginX5"></i>{{item.articleId.likesCount}}</span>
                   </div>

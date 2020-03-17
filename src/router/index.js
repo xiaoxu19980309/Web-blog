@@ -7,6 +7,7 @@ import Write from '@/components/Write'
 import Article from '@/components/Article'
 import Help from '@/components/Help'
 import BookMarks from '@/components/BookMarks'
+import LikeNote from '@/components/LikeNote'
 
 import Message from '@/components/Message'
 import Comments from '@/components/message/Comments'
@@ -143,6 +144,11 @@ const router = new Router({
         path: '/bookmarks',
         name: 'BookMarks',
         component: BookMarks
+      },
+      {
+        path: '/liked_note',
+        name: 'LikeNote',
+        component: LikeNote
       }]
     }
   ]

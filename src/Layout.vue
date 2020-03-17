@@ -230,6 +230,8 @@ export default {
           break
         case 12: this.$router.push({path: '/bookmarks'})
           break
+        case 13: this.$router.push({path: '/liked_note'})
+          break
         case 14: this.$router.push({path: '/setting/basic'})
           break
         case 15: this.$router.push({path: '/help'})

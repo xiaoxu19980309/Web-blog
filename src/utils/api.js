@@ -26,6 +26,8 @@ const api = {
   insertCollect: '/api/operate/insertCollect', // 收藏文章
   getStores: '/api/operate/getStores', // 获取收藏列表
   deleteStore: '/api/operate/deleteStore', // 取消收藏
+  staticNum: '/api/operate/staticNum', // 统计数据
+  getLikeList: '/api/operate/getLikeList', // 获取喜欢文章列表
 
   changePro: '/api/user/changePro', // 修改个人信息
   changeBasic: '/api/user/changeBasic', // 修改基本信息
