@@ -372,7 +372,8 @@ export default {
       this.axios.post(api.addArticle, {
         collectionId: this.currentItem._id,
         title: this.articleTitle,
-        content: ''
+        content: '',
+        content_text: ''
       }).then(res => {
         if (res.status === 200) {
           this.currentItem.articleList.splice(type === 1 ? 0 : this.currentItem.articleList.length - 1, 0, {title: '无标题文章'})

@@ -149,6 +149,11 @@ const router = new Router({
         path: '/liked_note',
         name: 'LikeNote',
         component: LikeNote
+      },
+      {
+        path: '/collection',
+        name: 'Collection',
+        component: Collection
       }]
     }
   ]

@@ -4,6 +4,7 @@ const api = {
   register: '/api/common/register', // 注册
   feedback: '/api/user/feedback', // 反馈
   getCollections: '/api/article/getCollections', // 获取文集列表
+  getCollectionDetail: '/api/article/getCollectionDetail', // 获取文集详情
   addCollection: '/api/article/insertCollection', // 新建文集
   editCollection: '/api/article/editCollection', // 修改文集
   deleteCollection: '/api/article/deleteCollection', // 删除文集
