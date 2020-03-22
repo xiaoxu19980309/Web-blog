@@ -39,7 +39,7 @@
         placeholder="搜索"
         v-model="search"
         clearable>
-        <el-button slot="append" icon="el-icon-search"></el-button>
+        <el-button slot="append" icon="el-icon-search" @click="searchClick()" @keyup.enter="searchClick()"></el-button>
       </el-input>
       <div class="header-right">
         <el-button type="text" v-if="!isLogin" class="color999 marginX15" @click="handleClick(2)">登录</el-button>
@@ -118,7 +118,7 @@
 
 <script>
 import { Container } from 'element-ui'
-import { api } from '@/utils/api'
+// import { api } from '@/utils/api'
 import defaultImg from '@/assets/default.jpg'
 export default {
   name: 'Layout',
@@ -139,7 +139,6 @@ export default {
   },
   mounted () {
     this.changePart()
-    // this.getTest()
     if (sessionStorage.getItem('user')) {
       this.isLogin = true
       let user = JSON.parse(sessionStorage.getItem('user'))
@@ -161,7 +160,7 @@ export default {
       } else if (path.indexOf('interest') >= 0) {
         this.activePart = 2
         this.isArticle = false
-      } else if (path.indexOf('article') >= 0) {
+      } else if (path.indexOf('article') >= 0 && path.indexOf('sarticle') === -1) {
         this.isArticle = true
       } else {
         this.activePart = 1
@@ -195,6 +194,10 @@ export default {
     },
     handleSelect (key, keyPath) {
       console.log(key, keyPath)
+    },
+    searchClick () {
+      if (!this.search) return
+      this.$router.push({path: '/search/sarticle', query: { q: this.search }})
     },
     handleClick (num) {
       switch (num) {
@@ -241,13 +244,6 @@ export default {
           this.$router.push({path: '/login'})
           break
       }
-    },
-    getTest () {
-      this.axios.post(api.test).then(res => {
-
-      }).catch(e => {
-
-      })
     }
   }
 }

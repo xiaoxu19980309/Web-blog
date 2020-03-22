@@ -25,6 +25,10 @@ import Setting from '@/components/Setting'
 import Basic from '@/components/setting/Basic'
 import Profile from '@/components/setting/Profile'
 
+import Search from '@/components/Search'
+import Sarticle from '@/components/search/Sarticle'
+import Suser from '@/components/search/Suser'
+
 Vue.use(Router)
 const vm = new Vue()
 const originalPush = Router.prototype.push
@@ -120,6 +124,22 @@ const router = new Router({
         }]
       },
       {
+        path: '/search',
+        name: 'Search',
+        component: Search,
+        redirect: '/search/sarticle',
+        children: [{
+          path: '/search/sarticle',
+          name: 'Sarticle',
+          component: Sarticle
+        },
+        {
+          path: '/search/suser',
+          name: 'Suser',
+          component: Suser
+        }]
+      },
+      {
         path: '/setting',
         name: 'Setting',
         component: Setting,
@@ -151,8 +171,8 @@ const router = new Router({
         component: LikeNote
       },
       {
-        path: '/collection',
-        name: 'Collection',
+        path: '/collection_main',
+        name: 'CollectionMain',
         component: Collection
       }]
     }
@@ -161,6 +181,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(res => res.meta.isLogin)) { // 判断是否需要登录
+    console.log(222222)
     if (sessionStorage.getItem('token')) {
       next()
     } else {

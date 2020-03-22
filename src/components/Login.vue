@@ -17,7 +17,7 @@
             <!-- <i class="el-icon-lock"></i> -->
             <el-input v-model="password" type="password" show-password style="width: 200px;"></el-input>
           </el-form-item>
-          <button class="btn login-btn" round style="width:100%;" @click="toLogin()">登录</button>
+          <button class="btn login-btn" round style="width:100%;" @click.prevent="toLogin()">登录</button>
         </el-form>
         <el-form v-else label-position="left" label-width="80px">
           <el-form-item label="用户名">
@@ -32,7 +32,7 @@
           <el-form-item label="昵称">
             <el-input v-model="form.nickname" type="text" maxlength="10" show-word-limit style="width: 200px;" ></el-input>
           </el-form-item>
-          <button class="btn login-btn" round style="width:100%;" @click="toRegister">注册</button>
+          <button class="btn login-btn" round style="width:100%;" @click.prevent="toRegister">注册</button>
         </el-form>
       </div>
     </div>
@@ -80,6 +80,7 @@ export default {
         username: this.username,
         password: this.password
       }
+      console.log(111)
       this.axios.post(api.login, param).then(res => {
         console.log(res)
         if (res.status === 200) {

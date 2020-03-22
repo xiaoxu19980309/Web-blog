@@ -227,6 +227,7 @@
     margin: 0 0 8px;
     font-size: 13px;
     line-height: 24px;
+    font-weight: 100;
     color: #999;
   }
   .author{
@@ -275,8 +276,6 @@
   font-weight: 400;
   text-align: center;
   vertical-align: middle;
-  -ms-touch-action: manipulation;
-  touch-action: manipulation;
   cursor: pointer;
   background-image: none;
   border: 1px solid transparent;
@@ -606,4 +605,44 @@
   width: 100%;
   min-height: 100px;
   border-radius: 6px;
+}
+.user_list{
+  font-weight: lighter;
+  li{
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #f0f0f0;
+    line-height: normal;
+    .avatar-collection{
+      display: inline-block;
+      margin-right: 8px;
+    }
+    .info{
+      display: inline-block;
+      max-width: 450px;
+      vertical-align: middle;
+      .name{
+        font-weight: bold;
+      }
+    }
+    .meta{
+      color: #969696;
+      padding-top: 2px;
+      span{
+        font-size: 12px;
+        margin-right: 10px;
+        padding-right: 10px;
+        border-right: 1px solid #969696;
+      }
+      span:last-child{
+        border: none;
+      }
+    }
+    .follow{
+      float: right;
+      width: 100px;
+      font-size: 15px;
+      margin-top: 8px;
+    }
+  }
 }

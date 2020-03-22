@@ -2,7 +2,9 @@ const api = {
   test: '/test/test1',
   login: '/api/common/login', // 登录
   register: '/api/common/register', // 注册
+  find: '/api/common/find', // 发现
   feedback: '/api/user/feedback', // 反馈
+
   getCollections: '/api/article/getCollections', // 获取文集列表
   getCollectionDetail: '/api/article/getCollectionDetail', // 获取文集详情
   addCollection: '/api/article/insertCollection', // 新建文集
@@ -21,6 +23,7 @@ const api = {
   deleteReply: '/api/article/deleteReply', // 删除回复
 
   getLikes: '/api/operate/getLikes', // 获取喜欢状态
+  getLikedList: '/api/operate/getLikedList', // 收到的喜欢列表
   getLikeCount: '/api/operate/getLikeCount', // 获取喜欢文章的人数
   insertLikes: '/api/operate/insertLikes', // 发表喜欢
   updateLikes: '/api/operate/updateLikes', // 更新喜欢
@@ -33,7 +36,10 @@ const api = {
   changePro: '/api/user/changePro', // 修改个人信息
   changeBasic: '/api/user/changeBasic', // 修改基本信息
   getProInfo: '/api/user/getProInfo', // 获取个人信息
-  upload: '/api/file/upload' // 文件上传
+  upload: '/api/file/upload', // 文件上传
+  cancelFocusUser: '/api/user/cancelFocusUser', // 取消关注
+  focusUser: '/api/user/focusUser', // 关注用户
+  getUserByName: '/api/user/getUserByName' // 搜索用户
 }
 
 export { api }

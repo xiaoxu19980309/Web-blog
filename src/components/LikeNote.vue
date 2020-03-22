@@ -125,7 +125,7 @@
           <div class="color96 fontSize14 marginBottom10">我的文集</div>
           <ul>
             <li v-for="(item, index) in collections" :key="index">
-              <a :href="'/#/collection?cid='+item._id">
+              <a :href="'/#/collection_main?cid='+item._id">
                 <i class="el-icon-document-copy marginX5"></i>{{item.name}}
               </a>
             </li>
