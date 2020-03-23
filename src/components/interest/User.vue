@@ -9,15 +9,15 @@
           <i class="el-icon-check"></i>
           <span>已关注</span>
         </span>
-        <span v-show="!hasFollow">
+        <!-- <span v-show="!hasFollow">
           <i class="el-icon-close"></i>
           <span>取消关注</span>
-        </span>
+        </span> -->
       </a>
-      <a href="" class="btn btn-success" v-if="!isMine">
+      <!-- <a href="" class="btn btn-success" v-if="!isMine">
         <i class="el-icon-plus"></i>
         <span>发简信</span>
-      </a>
+      </a> -->
       <!-- <a :href="'/#/user?id='+userId" target="_blank" class="btn btn-hollow">
         专题主页
         <i class="el-icon-arrow-right"></i>
@@ -138,7 +138,7 @@ export default {
       likeCount: 0,
       userId: '',
       isMine: false,
-      hasFollow: false,
+      hasFollow: true,
       showDialog: false,
       newPublish: [],
       newComment: [],
@@ -169,6 +169,15 @@ export default {
       this.getPage(1)
     })
   },
+  // beforeUpdate () {
+  //   let keys = this.$route.query
+  //   this.userId = keys.userId
+  //   this.$nextTick(() => {
+  //     this.getInfo()
+  //     this.getNum()
+  //     this.getPage(1)
+  //   })
+  // },
   methods: {
     loading () {
       this.isLoading = true

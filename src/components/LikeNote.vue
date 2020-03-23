@@ -13,12 +13,12 @@
             <ul>
               <li>
                 <div class="meta-block">
-                  <a href=""><p>11</p>关注<i class="el-icon-arrow-right"></i></a>
+                  <a href=""><p>{{focusCount}}</p>关注<i class="el-icon-arrow-right"></i></a>
                 </div>
               </li>
               <li>
                 <div class="meta-block">
-                  <a href=""><p>0</p>粉丝<i class="el-icon-arrow-right"></i></a>
+                  <a href=""><p>{{fansCount}}</p>粉丝<i class="el-icon-arrow-right"></i></a>
                 </div>
               </li>
               <li>
@@ -124,7 +124,7 @@
         <div class="padding15X textAlignLeft border-bottomf0">
           <div class="color96 fontSize14 marginBottom10">我的文集</div>
           <ul>
-            <li v-for="(item, index) in collections" :key="index">
+            <li v-for="(item, index) in collections" class="marginBottom10" :key="index">
               <a :href="'/#/collection_main?cid='+item._id">
                 <i class="el-icon-document-copy marginX5"></i>{{item.name}}
               </a>
@@ -161,6 +161,8 @@ export default {
       textCount: 0,
       likeCount: 0,
       number: 0,
+      focusCount: 0,
+      fansCount: 0,
       userId: '',
       isMine: false,
       hasFollow: false,
@@ -207,6 +209,8 @@ export default {
           this.textCount = res.data.textCount
           this.likeCount = res.data.likeCount
           this.number = res.data.number
+          this.focusCount = res.data.focusCount
+          this.fansCount = res.data.fansCount
         } else {
           this.$message.error('统计失败！')
         }

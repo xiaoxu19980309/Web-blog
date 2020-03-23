@@ -8,9 +8,14 @@
             <div v-for="(item2, index2) in item.likesList" :key="index2">
               <div class="content">
                 <div class="marginBottom10">
-                  <img v-if="item2.userId.photo" :src="item2.userId.photo" class="smallImg" alt="">
-                  <img v-else :src="defaultImg" class="smallImg" alt="">
-                  <span class="paddingX10">{{item2.userId.nickname}} 喜欢了这篇文章 </span>
+                  <a :href="'/#/user?userId='+item2.userId._id">
+                    <img v-if="item2.userId.photo" :src="item2.userId.photo" class="smallImg" alt="">
+                    <img v-else :src="defaultImg" class="smallImg" alt="">
+                  </a>
+                  <a :href="'/#/user?userId='+item2.userId._id">
+                    <span class="paddingX10">{{item2.userId.nickname}}</span>
+                  </a>
+                  <span>喜欢了这篇文章</span>
                   <span class="color96">{{item2.gmt_modified}}</span>
                 </div>
                 <a :href="'/#/article?articleId='+item2.articleId._id" target="_blank" class="title">{{item.title}}</a>

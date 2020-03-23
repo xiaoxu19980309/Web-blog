@@ -48,10 +48,11 @@
             <span class="name">朋友圈</span>
           </a>
         </li>
-        <li v-for="i in 30" :key="i" :class="[{'choosen': activePart === i}]">
-          <a :href="'/#/interest/user?id='+i">
-            <img src="../assets/logo.png" alt="">
-            <span class="name">张三</span>
+        <li v-for="(item,index) in list.focusList" :key="index" :class="[{'choosen': activePart === item._id}]">
+          <a :href="'/#/interest/user?userId='+item._id">
+            <img v-if="item.photo" :src="item.photo" alt="">
+            <img v-else :src="defaultImg" alt="">
+            <span class="name">{{item.nickname}}</span>
           </a>
         </li>
       </ul>
@@ -64,19 +65,29 @@
 
 <script>
 import circlepng from '@/assets/moments.png'
+import { api } from '@/utils/api'
+import defaultImg from '@/assets/default.jpg'
 export default {
   name: 'Interest',
   data () {
     return {
       circlepng,
+      defaultImg,
       chooseText: '全部关注',
       visible: false,
       isActive: false,
-      activePart: 0
+      activePart: 0,
+      userId: '',
+      list: []
     }
   },
   mounted () {
     this.changePart()
+    if (sessionStorage.getItem('user')) {
+      let user = JSON.parse(sessionStorage.getItem('user'))
+      this.userId = user.userId
+    }
+    this.getList()
   },
   beforeUpdate () {
     this.changePart()
@@ -89,8 +100,8 @@ export default {
         this.activePart = 0
       } else if (path.indexOf('user') >= 0) {
         let keys = this.$route.query
-        if (keys.id) {
-          this.activePart = parseInt(keys.id)
+        if (keys.userId) {
+          this.activePart = keys.userId
           this.isActive = false
         }
       }
@@ -105,6 +116,19 @@ export default {
           break
       }
       this.visible = false
+    },
+    getList () {
+      this.axios.post(api.getFocusList, {
+        userId: this.userId
+      }).then(res => {
+        if (res.status === 200) {
+          this.list = res.data
+        } else {
+          this.$message.error('获取数据失败！')
+        }
+      }).catch(e => {
+
+      })
     }
   }
 }

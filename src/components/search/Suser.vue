@@ -16,7 +16,7 @@
             </div>
             <div class="meta"><span>写了 1397 字，获得了 7 个喜欢</span></div>
           </div>
-          <a v-if="userId!=item._id" class="btn btn-success follow" @click="concern(item)">
+          <a v-if="userId!=item._id&&!item.hasFocus" class="btn btn-success follow" @click="concern(item)">
             <i class="el-icon-plus"></i>
             <span>关注</span>
           </a>
@@ -62,6 +62,21 @@ export default {
         this.isLoading = false
         if (res.status === 200) {
           this.list = res.data
+          this.list.forEach(element => {
+            if (element.fansList.length !== 0) {
+              let flag = false
+              element.fansList.forEach(ele => {
+                if (ele === this.userId) {
+                  flag = true
+                }
+              })
+              if (flag) {
+                this.$set(element, 'hasFocus', true)
+              } else {
+                this.$set(element, 'hasFocus', false)
+              }
+            }
+          })
         } else {
           this.$message.error('获取失败！')
         }

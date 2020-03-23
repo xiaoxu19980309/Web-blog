@@ -5,15 +5,22 @@
 </template>
 
 <script>
+// import { api } from '@/utils/api'
 export default {
   name: 'Moments',
   data () {
     return {
-      isLoading: false
+      isLoading: false,
+      list: [],
+      userId: ''
     }
   },
   mounted () {
-    this.loading()
+    // this.loading()
+    if (sessionStorage.getItem('user')) {
+      let user = JSON.parse(sessionStorage.getItem('user'))
+      this.userId = user.userId
+    }
   },
   methods: {
     loading () {

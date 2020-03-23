@@ -39,6 +39,7 @@ const api = {
   upload: '/api/file/upload', // 文件上传
   cancelFocusUser: '/api/user/cancelFocusUser', // 取消关注
   focusUser: '/api/user/focusUser', // 关注用户
+  getFocusList: '/api/user/getFocusList', // 获取关注用户
   getUserByName: '/api/user/getUserByName' // 搜索用户
 }
 

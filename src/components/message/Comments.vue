@@ -7,9 +7,14 @@
           <li v-for="(item, index) in list" :key="index">
             <div class="content">
               <div class="marginBottom10">
-                <img v-if="item.userId.photo" :src="item.userId.photo" class="smallImg" alt="">
-                <img v-else :src="defaultImg" class="smallImg" alt="">
-                <span class="paddingX10">{{item.userId.nickname}} 评论了:</span>
+                <a :href="'/#/user?userId='+item.userId._id">
+                  <img v-if="item.userId.photo" :src="item.userId.photo" class="smallImg" alt="">
+                  <img v-else :src="defaultImg" class="smallImg" alt="">
+                </a>
+                <a :href="'/#/user?userId='+item.userId._id">
+                  <span class="paddingX10">{{item.userId.nickname}}</span>
+                </a>
+                <span>评论了:</span>
                 <span>{{item.content}}</span>
               </div>
               <a :href="'/#/article?articleId='+item.articleId._id" target="_blank" class="title">{{item.articleId.title}}</a>

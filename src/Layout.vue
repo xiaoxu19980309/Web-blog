@@ -38,8 +38,9 @@
       <el-input
         placeholder="搜索"
         v-model="search"
+        @keyup.enter.native="searchClick()"
         clearable>
-        <el-button slot="append" icon="el-icon-search" @click="searchClick()" @keyup.enter="searchClick()"></el-button>
+        <el-button slot="append" icon="el-icon-search" @click="searchClick()"></el-button>
       </el-input>
       <div class="header-right">
         <el-button type="text" v-if="!isLogin" class="color999 marginX15" @click="handleClick(2)">登录</el-button>
