@@ -227,6 +227,8 @@ export default {
       console.log(oldVal, '///', newVal, '////')
       if (this.collections[newVal].articleList.length >= 1) {
         this.hasArticle = true
+        this.articleTitle = this.collections[newVal].articleList[0].title
+        this.editContent = this.collections[newVal].articleList[0].content.toString()
       } else {
         this.hasArticle = false
       }

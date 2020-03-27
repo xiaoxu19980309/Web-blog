@@ -16,9 +16,7 @@
               <a class="btn btn-hollow">关注</a>
             </div>
             <div class="Flex color96">
-              <span class="marginRight10">{{time}}</span>
-              <span class="marginRight10">字数 {{length}}</span>
-              <span>阅读 156</span>
+              <span class="marginRight10">{{time}}  字数 {{length}}</span>
             </div>
           </div>
         </div>
@@ -74,11 +72,11 @@
               <div class="comment-text">{{item.content}}</div>
               <div class="click-btn">
                 <div style="display: block">
-                  <span class="comment-icon">
+                  <!-- <span class="comment-icon">
                     <i class="iconfont icon-dianzan"></i>
                     <span>点赞</span>
-                  </span>
-                  <span class="marginX15 comment-icon" @click="replyComment(item)">
+                  </span> -->
+                  <span class="comment-icon" @click="replyComment(item)">
                     <i class="iconfont icon-ziyuan"></i>
                     <span>回复</span>
                   </span>
@@ -151,7 +149,6 @@
 
 <script>
 import { api } from '@/utils/api'
-import { countText } from '@/utils/common'
 import defaultImg from '@/assets/default.jpg'
 import nothing from '@/assets/nofind.png'
 export default {
@@ -194,8 +191,8 @@ export default {
       this.title = res.data.title
       this.content = res.data.content
       this.time = res.data.gmt_create
-      this.countNum = res.data.likesCount
-      this.length = countText(this.content)
+      this.countNum = res.data.likesList.length
+      this.length = res.data.content_text.length
       this.user = res.data.userId
       this.commentList = res.data.commentList
       if (this.user._id === this.userId) {

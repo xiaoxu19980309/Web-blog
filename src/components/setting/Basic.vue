@@ -3,7 +3,7 @@
     <el-form ref="form" :model="form" label-width="120px">
       <el-form-item>
         <img :src="imgurl" alt="" class="_imgbig">
-        <el-button type="primary" @click="changePhoto">修改头像</el-button>
+        <el-button type="primary" @click="changePhoto" style="vertical-align: text-bottom;">修改头像</el-button>
         <input type="file" ref="uploadFile" style="display: none" @change="upload">
       </el-form-item>
       <el-form-item label="昵称">

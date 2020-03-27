@@ -10,11 +10,11 @@
           <div class="info">
             <a :href="'/#/user?userId='+item._id" target="_blank" class="name">{{item.nickname}}</a>
             <div class="meta">
-              <span>关注 18</span>
-              <span>粉丝 18</span>
-              <span>文章 18</span>
+              <span>关注 {{item.focusList?item.focusList.length:0}}</span>
+              <span>粉丝 {{item.fansList?item.fansList.length:0}}</span>
+              <span>文章 {{item.articleList?item.articleList.length:0}}</span>
             </div>
-            <div class="meta"><span>写了 1397 字，获得了 7 个喜欢</span></div>
+            <div class="meta"><span>写了 {{item.textCount}} 字，获得了 {{item.likeCount}} 个喜欢</span></div>
           </div>
           <a v-if="userId!=item._id&&!item.hasFocus" class="btn btn-success follow" @click="concern(item)">
             <i class="el-icon-plus"></i>
@@ -63,6 +63,14 @@ export default {
         if (res.status === 200) {
           this.list = res.data
           this.list.forEach(element => {
+            let textCount = 0
+            let likeCount = 0
+            element.articleList.forEach(ele => {
+              textCount += ele.content_text.length
+              likeCount += ele.likesList.length
+            })
+            this.$set(element, 'textCount', textCount)
+            this.$set(element, 'likeCount', likeCount)
             if (element.fansList.length !== 0) {
               let flag = false
               element.fansList.forEach(ele => {

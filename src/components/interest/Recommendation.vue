@@ -27,25 +27,30 @@
       <el-tab-pane name="second">
         <span slot="label"><i class="iconfont icon-character marginX5"></i>推荐作者</span>
         <ul class="add-follow-list">
-          <li>
+          <li v-for="(item, index) in list" :key="index">
             <div>
-              <el-button type="success" round>
+              <el-button v-if="!item.hasFocus" type="success" round @click="concern(item)">
                 <i class="iconfont icon-jiahao1"></i>
                 关注
               </el-button>
+              <el-button v-else type="info" round>
+                <i class="iconfont icon-jiahao1"></i>
+                已关注
+              </el-button>
               <a href="" target="_blank" class="avatar">
-                <img src="../../assets/moments.png" alt="">
+                <img v-if="item.photo" :src="item.photo" alt="">
+                <img v-else :src="defaultImg" alt="">
               </a>
               <div class="description">
-                <a href="" class="name">独孤求败</a>
-                <p class="color96">联系微信公众号</p>
-                <a href="" target="_blank">
+                <a href="" class="name">{{item.nickname}}</a>
+                <p class="color96">{{item.description}}</p>
+                <a v-if="item.articleList&&item.articleList[0]" :href="'/#/article?articleId='+item.articleList[0]._id" target="_blank">
                   <i class="iconfont icon-wenzhang2"></i>
-                  <span class="color96">开始记日记...</span>
+                  <span class="color96">{{item.articleList[0].title}}...</span>
                 </a>
-                <a href="" target="_blank">
+                <a v-if="item.articleList&&item.articleList[1]" :href="'/#/article?articleId='+item.articleList[1]._id" target="_blank">
                   <i class="iconfont icon-wenzhang2"></i>
-                  <span class="color96">开始记日记...</span>
+                  <span class="color96">{{item.articleList[1].title}}...</span>
                 </a>
               </div>
             </div>
@@ -83,16 +88,25 @@
 </template>
 
 <script>
+import { api } from '@/utils/api'
+import defaultImg from '@/assets/default.jpg'
 export default {
   name: 'Recommendation',
   data () {
     return {
+      defaultImg,
       activeName: 'first',
-      isLoading: false
+      isLoading: false,
+      list: [],
+      userId: ''
     }
   },
   mounted () {
-    this.loading()
+    if (sessionStorage.getItem('user')) {
+      let user = JSON.parse(sessionStorage.getItem('user'))
+      this.userId = user.userId
+    }
+    this.getList()
   },
   methods: {
     loading () {
@@ -100,6 +114,40 @@ export default {
       setTimeout(() => {
         this.isLoading = false
       }, 1000)
+    },
+    getList () {
+      this.isLoading = true
+      this.axios.post(api.getRecommend, {userId: this.userId}).then(res => {
+        this.isLoading = false
+        if (res.status === 200) {
+          this.list = res.data
+          this.list.forEach(element => {
+            if (element.fansList.find(item => item === this.userId)) {
+              this.$set(element, 'hasFocus', true)
+            } else {
+              this.$set(element, 'hasFocus', false)
+            }
+          })
+        } else {
+          this.$message.error('获取失败！')
+        }
+      }).catch(e => {
+
+      })
+    },
+    concern (item) {
+      this.isLoading = true
+      this.axios.post(api.focusUser, {userId: this.userId, focusId: item._id}).then(res => {
+        this.isLoading = false
+        if (res.status === 200) {
+          this.$message.success('关注成功！')
+          this.getList()
+        } else {
+          this.$message.error('关注失败')
+        }
+      }).catch(e => {
+
+      })
     },
     handleClick () {
 

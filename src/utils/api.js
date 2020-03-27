@@ -40,7 +40,8 @@ const api = {
   cancelFocusUser: '/api/user/cancelFocusUser', // 取消关注
   focusUser: '/api/user/focusUser', // 关注用户
   getFocusList: '/api/user/getFocusList', // 获取关注用户
-  getUserByName: '/api/user/getUserByName' // 搜索用户
+  getUserByName: '/api/user/getUserByName', // 搜索用户
+  getRecommend: '/api/user/getRecommend' // 获取推荐作者
 }
 
 export { api }

@@ -12,34 +12,34 @@
           <div class="info">
             <ul>
               <li>
-                <div class="meta-block">
-                  <a href=""><p>{{focusCount}}</p>关注<i class="el-icon-arrow-right"></i></a>
+                <div class="meta-block _divhover">
+                  <a @click="handleClick(1)"><p>{{focusCount}}</p>关注<i class="el-icon-arrow-right"></i></a>
+                </div>
+              </li>
+              <li>
+                <div class="meta-block _divhover">
+                  <a @click="handleClick(2)"><p>{{fansCount}}</p>粉丝<i class="el-icon-arrow-right"></i></a>
                 </div>
               </li>
               <li>
                 <div class="meta-block">
-                  <a href=""><p>{{fansCount}}</p>粉丝<i class="el-icon-arrow-right"></i></a>
+                  <a><p>{{number}}</p>文章</a>
                 </div>
               </li>
               <li>
                 <div class="meta-block">
-                  <a href=""><p>{{number}}</p>文章<i class="el-icon-arrow-right"></i></a>
+                  <a><p>{{textCount}}</p>字数</a>
                 </div>
               </li>
               <li>
                 <div class="meta-block">
-                  <a href=""><p>{{textCount}}</p>字数</a>
-                </div>
-              </li>
-              <li>
-                <div class="meta-block">
-                  <a href=""><p>{{likeCount}}</p>收获喜欢</a>
+                  <a><p>{{likeCount}}</p>收获喜欢</a>
                 </div>
               </li>
             </ul>
           </div>
         </div>
-        <el-tabs v-model="activeName" v-loading.lock="isLoading">
+        <el-tabs v-if="activePart==='first'" v-model="activeName" v-loading.lock="isLoading">
           <el-tab-pane name="first">
             <span slot="label"><i class="iconfont icon-wenzhang2 marginX5"></i>关注的专题/文集</span>
             <ul class="note-list" v-if="likeCollection.length!=0">
@@ -92,6 +92,63 @@
                   </div>
                 </li>
               </div>
+            </ul>
+            <el-button type="info" round class="load-more" v-if="hasmore2">阅读更多</el-button>
+            <div class="find-noting" v-if="likeArticle.length===0">
+              <img :src="nothing" alt="找不到结果">
+              <div>这里还没有内容~</div>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+        <el-tabs v-if="activePart==='second'" v-model="activeName2" v-loading.lock="isLoading">
+          <el-tab-pane name="first">
+            <span slot="label"><i class="iconfont icon-wenzhang2 marginX5"></i>关注用户</span>
+            <ul class="user_list textAlignLeft" v-if="userList.length!=0">
+              <li v-for="(item, index) in userList" :key="index">
+                <a :href="'/#/user?userId='+item._id" class="avatar-collection">
+                  <img v-if="item.photo" :src="item.photo" alt="">
+                  <img v-else :src="defaultImg" alt="">
+                </a>
+                <div class="info">
+                  <a :href="'/#/user?userId='+item._id" target="_blank" class="name">{{item.nickname}}</a>
+                  <div class="meta">
+                    <span>关注 {{item.focusList?item.focusList.length:0}}</span>
+                    <span>粉丝 {{item.fansList?item.fansList.length:0}}</span>
+                    <span>文章 {{item.articleList?item.articleList.length:0}}</span>
+                  </div>
+                  <div class="meta"><span>写了 {{item.textCount}} 字，获得了 {{item.likeCount}} 个喜欢</span></div>
+                </div>
+                <a class="btn btn-default follow" @click="cancelConcern(item)">
+                  <span><i class="el-icon-close"></i>取消关注</span>
+                  <span><i class="el-icon-check"></i>已关注</span>
+                </a>
+              </li>
+            </ul>
+            <el-backtop target=".el-header"></el-backtop>
+            <el-button type="info" round class="load-more" v-if="hasmore1">阅读更多</el-button>
+            <div class="find-noting" v-if="userList.length===0">
+              <img :src="nothing" alt="找不到结果">
+              <div>这里还没有内容~</div>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane name="second">
+            <span slot="label"><i class="iconfont icon-wenzhang-copy marginX5"></i>粉丝</span>
+            <ul class="user_list textAlignLeft" v-if="fansList.length!=0">
+              <li v-for="(item, index) in fansList" :key="index">
+                <a :href="'/#/user?userId='+item._id" class="avatar-collection">
+                  <img v-if="item.photo" :src="item.photo" alt="">
+                  <img v-else :src="defaultImg" alt="">
+                </a>
+                <div class="info">
+                  <a :href="'/#/user?userId='+item._id" target="_blank" class="name">{{item.nickname}}</a>
+                  <div class="meta">
+                    <span>关注 {{item.focusList?item.focusList.length:0}}</span>
+                    <span>粉丝 {{item.fansList?item.fansList.length:0}}</span>
+                    <span>文章 {{item.articleList?item.articleList.length:0}}</span>
+                  </div>
+                  <div class="meta"><span>写了 {{item.textCount}} 字，获得了 {{item.likeCount}} 个喜欢</span></div>
+                </div>
+              </li>
             </ul>
             <el-button type="info" round class="load-more" v-if="hasmore2">阅读更多</el-button>
             <div class="find-noting" v-if="likeArticle.length===0">
@@ -157,7 +214,10 @@ export default {
       nothing,
       defaultImg,
       isLoading: false,
+      isLoading2: false,
       activeName: 'first',
+      activeName2: 'first',
+      activePart: 'first',
       textCount: 0,
       likeCount: 0,
       number: 0,
@@ -172,7 +232,9 @@ export default {
       hasmore1: false,
       hasmore2: false,
       user: {},
-      collections: []
+      collections: [],
+      userList: [],
+      fansList: []
     }
   },
   watch: {
@@ -181,6 +243,13 @@ export default {
         // this.getPage(1)
       } else if (newVal === 'second') {
         this.getPage(2)
+      }
+    },
+    activeName2 (newVal, oldVal) {
+      if (newVal === 'first') {
+        this.getDataList(1)
+      } else if (newVal === 'second') {
+        this.getDataList(2)
       }
     }
   },
@@ -202,6 +271,17 @@ export default {
       setTimeout(() => {
         this.isLoading = false
       }, 1000)
+    },
+    handleClick (num) {
+      switch (num) {
+        case 1: this.activePart = 'second'
+          this.getDataList(1)
+          break
+        case 2: this.activePart = 'second'
+          this.activeName2 = 'second'
+          this.getDataList(2)
+          break
+      }
     },
     getNum () {
       this.axios.post(api.staticNum, {userId: this.userId}).then(res => {
@@ -277,6 +357,55 @@ export default {
         } else {
           this.$message.error('获取失败')
         }
+      }).catch(e => {
+        console.log(e)
+      })
+    },
+    getDataList (type) {
+      this.isLoading2 = true
+      this.axios.post(api.getFocusList, {userId: this.userId}).then(res => {
+        this.isLoading2 = false
+        if (res.status === 200) {
+          if (type === 1) {
+            this.userList = res.data.focusList
+            let textCount = 0
+            let likeCount = 0
+            this.userList.forEach(element => {
+              element.articleList.forEach(ele => {
+                textCount += ele.content_text.length
+                likeCount += ele.likesList.length
+              })
+              this.$set(element, 'textCount', textCount)
+              this.$set(element, 'likeCount', likeCount)
+            })
+          } else {
+            this.fansList = res.data.fansList
+          }
+        } else {
+          this.$message.error('获取失败！')
+        }
+      }).catch(e => {
+
+      })
+    },
+    cancelConcern (item) {
+      let _this = this
+      this.isLoading2 = true
+      this.$confirm('确定取消关注' + item.nickname + '?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        _this.axios.post(api.cancelFocusUser, {userId: this.userId, focusId: item._id}).then(res => {
+          _this.isLoading2 = false
+          if (res.status === 200) {
+            _this.$message.success('操作成功！')
+            this.getDataList(1)
+          } else {
+            _this.$message.error('操作失败')
+          }
+        }).catch(e => {
+          console.log(e)
+        })
       }).catch(e => {
         console.log(e)
       })
