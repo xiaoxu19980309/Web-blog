@@ -1,15 +1,15 @@
 <template>
   <div v-loading.lock="isLoading">
     <ul class="note-list">
-      <div>
-        <li v-for="(item, index) in list" :key="index">
+      <div v-for="(item, index) in list" :key="index">
+        <li v-for="(item2, index2) in item.articleList" :key="index2">
           <div class="content">
-            <a :href="'/#/article?articleId='+item._id" target="_blank" class="title">{{item.title}}</a>
-            <p class="abstract" v-text="item.content_text.substr(0,80)+'...'"></p>
+            <a :href="'/#/article?articleId='+item2._id" target="_blank" class="title">{{item2.title}}</a>
+            <p class="abstract" v-text="item2.content_text.substr(0,80)+'...'"></p>
             <div class="meta">
-              <span><a :href="'/#/user?userId='+item.userId._id" target="_blank">{{item.userId.nickname}}</a></span>
-              <span><i class="iconfont icon-pinglun1 marginX5"></i>{{item.commentsCount}}</span>
-              <span><i class="iconfont icon-aixin1 color96 marginX5"></i>{{item.likesCount}}</span>
+              <span><a :href="'/#/user?userId='+item2.userId._id" target="_blank">{{item2.userId.nickname}}</a></span>
+              <span><i class="iconfont icon-pinglun1 marginX5"></i>{{item2.commentList.length}}</span>
+              <span><i class="iconfont icon-aixin1 color96 marginX5"></i>{{item2.likesList.length}}</span>
             </div>
           </div>
         </li>
@@ -36,11 +36,11 @@ export default {
     }
   },
   mounted () {
-    // this.loading()
     if (sessionStorage.getItem('user')) {
       let user = JSON.parse(sessionStorage.getItem('user'))
       this.userId = user.userId
     }
+    this.getList()
   },
   methods: {
     loading () {
@@ -50,9 +50,11 @@ export default {
       }, 1000)
     },
     getList () {
+      this.isLoading = true
       this.axios.post(api.getFocusList, {userId: this.userId}).then(res => {
+        this.isLoading = false
         if (res.status === 200) {
-          this.list = res.data
+          this.list = res.data.focusList
         } else {
           this.$message.error('获取失败！')
         }

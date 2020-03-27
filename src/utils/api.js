@@ -40,8 +40,13 @@ const api = {
   cancelFocusUser: '/api/user/cancelFocusUser', // 取消关注
   focusUser: '/api/user/focusUser', // 关注用户
   getFocusList: '/api/user/getFocusList', // 获取关注用户
+  getFansList: '/api/user/getFansList', // 获取粉丝用户
   getUserByName: '/api/user/getUserByName', // 搜索用户
-  getRecommend: '/api/user/getRecommend' // 获取推荐作者
+  getRecommend: '/api/user/getRecommend', // 获取推荐作者
+
+  createSubject: '/api/subject/createSubject', // 新建专题
+  getRecommondSubjects: '/api/subject/getRecommondSubjects', // 推荐专题列表
+  getSubjects: '/api/subject/getSubjects' // 获取专题列表
 }
 
 export { api }

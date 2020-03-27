@@ -173,7 +173,14 @@
         </div>
         <div class="padding15X textAlignLeft border-bottomf0">
           <div class="color96 fontSize14 marginBottom10">我创建的专题</div>
-          <div class="_divhover color42c02e fontSize12">
+          <ul>
+            <li v-for="(item, index) in subjectList" class="marginBottom10" :key="index">
+              <a :href="'/#/collection_main?sid='+item._id">
+                {{item.name}}
+              </a>
+            </li>
+          </ul>
+          <div class="_divhover color42c02e fontSize12" @click="createSubject()">
             <i class="iconfont icon-jiahao1 marginX5"></i>
             <span>创建一个新专题</span>
           </div>
@@ -199,6 +206,28 @@
         <el-button slot="append" icon="el-icon-search"></el-button>
       </el-input>
       <div class="margin20X textAlignLeft">132456</div>
+    </el-dialog>
+    <el-dialog
+      title="新建专题"
+      :visible.sync="dialog"
+      width="50%"
+      >
+      <div class="textAlignLeft marginX20">
+        <span class="paddingX10">专题名</span>
+        <el-input placeholder="请输入新专题名" v-model="inputName" :maxlength="20"></el-input>
+        <div>
+          <span class="paddingX10">专题简介</span>
+          <el-input placeholder="请输入新专题简介" v-model="description" :maxlength="200"></el-input>
+        </div>
+        <div>
+          <img :src="imgurl" alt="" class="_imgbig">
+          <el-button type="primary" @click="changePhoto" style="vertical-align: text-bottom;">修改头像</el-button>
+          <input type="file" ref="uploadFile" style="display: none" @change="upload">
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="addSubject()">确 定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -227,14 +256,19 @@ export default {
       isMine: false,
       hasFollow: false,
       showDialog: false,
-      likeCollection: [],
-      likeArticle: [],
+      likeCollection: [], // 喜欢的专题
+      likeArticle: [], // 喜欢的文章
       hasmore1: false,
       hasmore2: false,
       user: {},
-      collections: [],
-      userList: [],
-      fansList: []
+      collections: [], // 文集
+      userList: [], // 关注用户列表
+      fansList: [], // 粉丝列表
+      dialog: false, // 弹窗
+      inputName: '', // 专题名
+      imgurl: '', // 专题头像
+      description: '', // 专题简介
+      subjectList: [] // 专题列表
     }
   },
   watch: {
@@ -262,6 +296,7 @@ export default {
       this.getInfo()
       this.getNum()
       this.getCollection()
+      this.getSubjects()
       // this.getPage(1)
     })
   },
@@ -361,6 +396,17 @@ export default {
         console.log(e)
       })
     },
+    getSubjects () {
+      this.axios.post(api.getSubjects, {userId: this.userId}).then(res => {
+        if (res.status === 200) {
+          this.subjectList = res.data
+        } else {
+          this.$message.error('获取失败！')
+        }
+      }).catch(e => {
+
+      })
+    },
     getDataList (type) {
       this.isLoading2 = true
       this.axios.post(api.getFocusList, {userId: this.userId}).then(res => {
@@ -406,6 +452,54 @@ export default {
         }).catch(e => {
           console.log(e)
         })
+      }).catch(e => {
+        console.log(e)
+      })
+    },
+    createSubject () {
+      this.dialog = true
+      this.inputName = ''
+    },
+    changePhoto () {
+      this.$refs.uploadFile.click()
+    },
+    upload (event) {
+      let files = event.target.files
+      if (!files.length) {
+        return
+      }
+      let param = new FormData()
+      param.append('file', files[0])
+      console.log(param)
+      let config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+      this.axios.post(api.upload, param, config).then(res => {
+        if (res.status === 200) {
+          this.$message.success('上传成功！')
+          this.imgurl = res.data
+        } else {
+          this.$message.error('上传失败！')
+        }
+      }).catch(e => {
+        console.log(e)
+      })
+      this.$refs.uploadFile.value = null
+    },
+    addSubject () {
+      if (this.inputName.trim().length === 0) {
+        this.$message.warning('专题名不能为空！')
+        return
+      }
+      this.axios.post(api.createSubject, {userId: this.userId, name: this.inputName, photo: this.imgurl}).then(res => {
+        if (res.status === 200) {
+          this.$message.success('新建成功！')
+          this.dialog = false
+        } else {
+          this.$message.error('新建失败！')
+        }
       }).catch(e => {
         console.log(e)
       })

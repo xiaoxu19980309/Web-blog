@@ -1,30 +1,7 @@
 <template>
   <div class="_recommendation" v-loading.lock="isLoading">
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="全部推荐" name="first">
-        <ul class="add-follow-list">
-          <li>
-            <div>
-              <el-button type="success" round>
-                <i class="iconfont icon-jiahao1"></i>
-                关注
-              </el-button>
-              <a href="" target="_blank" class="avatar">
-                <img src="../../assets/moments.png" alt="">
-              </a>
-              <div class="description">
-                <a href="" class="name">独孤求败</a>
-                <div class="meta">
-                  <a href="">令狐冲</a>
-                  <span class="color96">关注了作者</span>
-                </div>
-              </div>
-            </div>
-          </li>
-        </ul>
-        <el-button type="info" round class="load-more">阅读更多</el-button>
-      </el-tab-pane>
-      <el-tab-pane name="second">
+      <el-tab-pane name="first">
         <span slot="label"><i class="iconfont icon-character marginX5"></i>推荐作者</span>
         <ul class="add-follow-list">
           <li v-for="(item, index) in list" :key="index">
@@ -56,23 +33,24 @@
             </div>
           </li>
         </ul>
-        <el-button type="info" round class="load-more">阅读更多</el-button>
+        <el-button type="info" round class="load-more" v-if="hasmore1">阅读更多</el-button>
       </el-tab-pane>
-      <el-tab-pane name="third">
+      <el-tab-pane name="second">
         <span slot="label"><i class="iconfont icon-caidan1 marginX5"></i>推荐专题</span>
         <ul class="add-follow-list">
-          <li v-for="i in 10" :key="i">
+          <li v-for="(item, index) in subjectList" :key="index">
             <div>
               <el-button type="success" round>
                 <i class="iconfont icon-jiahao1"></i>
                 关注
               </el-button>
               <a href="" target="_blank" class="avatar">
-                <img src="../../assets/moments.png" alt="">
+                <img v-if="item.photo" :src="item.photo" alt="">
+                <img v-else :src="defaultImg" alt="">
               </a>
               <div class="description">
-                <a href="" class="name">独孤求败</a>
-                <p class="color96">联系微信公众号</p>
+                <a href="" class="name">{{item.name}}</a>
+                <p class="color96">{{item.descripton}}</p>
                 <a href="" target="_blank">
                   <i class="iconfont icon-caidan1"></i>
                   <span class="color96">159.7K篇文章 · 2620.5K人关注</span>
@@ -81,7 +59,11 @@
             </div>
           </li>
         </ul>
-        <el-button type="info" round class="load-more">阅读更多</el-button>
+        <div class="find-noting" v-if="subjectList.length===0">
+          <img :src="nothing" alt="找不到结果">
+          <div>这里还没有内容~</div>
+        </div>
+        <el-button type="info" round class="load-more" v-if="hasmore2">阅读更多</el-button>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -89,16 +71,28 @@
 
 <script>
 import { api } from '@/utils/api'
+import nothing from '@/assets/nofind.png'
 import defaultImg from '@/assets/default.jpg'
 export default {
   name: 'Recommendation',
   data () {
     return {
       defaultImg,
+      nothing,
       activeName: 'first',
       isLoading: false,
-      list: [],
+      hasmore1: false, // 作者列表
+      hasmore2: false, // 专题列表
+      list: [], // 推荐作者列表
+      subjectList: [], // 推荐专题列表
       userId: ''
+    }
+  },
+  watch: {
+    activeName (newVal, oldVal) {
+      if (newVal === 'second') {
+        this.getSubjectList()
+      }
     }
   },
   mounted () {
@@ -121,6 +115,9 @@ export default {
         this.isLoading = false
         if (res.status === 200) {
           this.list = res.data
+          if (this.list.length === 10) {
+            this.hasmore1 = true
+          }
           this.list.forEach(element => {
             if (element.fansList.find(item => item === this.userId)) {
               this.$set(element, 'hasFocus', true)
@@ -151,6 +148,22 @@ export default {
     },
     handleClick () {
 
+    },
+    getSubjectList () {
+      this.isLoading = true
+      this.axios.post(api.getRecommondSubjects, {userId: this.userId}).then(res => {
+        this.isLoading = false
+        if (res.status === 200) {
+          this.subjectList = res.data
+          if (this.subjectList.length === 10) {
+            this.hasmore2 = true
+          }
+        } else {
+          this.$message.error('获取失败！')
+        }
+      }).catch(e => {
+
+      })
     }
   }
 }

@@ -37,9 +37,9 @@
         <ul class="note-list" v-if="newPublish.length!=0">
           <div>
             <li class="has-img" v-for="(item, index) in newPublish" :key="index">
-              <a href="" target="_blank" class="warp-img">
+              <!-- <a href="" target="_blank" class="warp-img">
                 <img src="../../assets/logo.png" alt="">
-              </a>
+              </a> -->
               <div class="content">
                 <a :href="'/#/article?articleId='+item._id" target="_blank" class="title">{{item.title}}</a>
                 <p class="abstract" v-text="item.content_text"></p>

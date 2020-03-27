@@ -80,9 +80,7 @@ export default {
         username: this.username,
         password: this.password
       }
-      console.log(111)
       this.axios.post(api.login, param).then(res => {
-        console.log(res)
         if (res.status === 200) {
           this.$message.success('登录成功！')
           sessionStorage.setItem('user', JSON.stringify(res.data))
