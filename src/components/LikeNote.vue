@@ -213,17 +213,19 @@
       width="50%"
       >
       <div class="textAlignLeft marginX20">
-        <span class="paddingX10">专题名</span>
-        <el-input placeholder="请输入新专题名" v-model="inputName" :maxlength="20"></el-input>
-        <div>
-          <span class="paddingX10">专题简介</span>
-          <el-input placeholder="请输入新专题简介" v-model="description" :maxlength="200"></el-input>
-        </div>
-        <div>
-          <img :src="imgurl" alt="" class="_imgbig">
-          <el-button type="primary" @click="changePhoto" style="vertical-align: text-bottom;">修改头像</el-button>
-          <input type="file" ref="uploadFile" style="display: none" @change="upload">
-        </div>
+        <el-form label-position="right" label-width="80px">
+          <el-form-item label="专题名">
+            <el-input placeholder="请输入新专题名" v-model="inputName" :maxlength="20"></el-input>
+          </el-form-item>
+          <el-form-item label="专题简介">
+            <el-input placeholder="请输入新专题简介" v-model="description" :maxlength="200"></el-input>
+          </el-form-item>
+          <el-form-item label="头像">
+            <img :src="imgurl" alt="" class="_imgbig borderblack">
+            <el-button type="primary" @click="changePhoto" class="marginX10" style="vertical-align: text-bottom;">修改头像</el-button>
+            <input type="file" ref="uploadFile" style="display: none" @change="upload">
+          </el-form-item>
+        </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="addSubject()">确 定</el-button>
@@ -493,10 +495,11 @@ export default {
         this.$message.warning('专题名不能为空！')
         return
       }
-      this.axios.post(api.createSubject, {userId: this.userId, name: this.inputName, photo: this.imgurl}).then(res => {
+      this.axios.post(api.createSubject, {userId: this.userId, name: this.inputName, description: this.description, photo: this.imgurl}).then(res => {
         if (res.status === 200) {
           this.$message.success('新建成功！')
           this.dialog = false
+          this.getSubjects()
         } else {
           this.$message.error('新建失败！')
         }

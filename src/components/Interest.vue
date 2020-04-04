@@ -48,11 +48,16 @@
             <span class="name">朋友圈</span>
           </a>
         </li>
-        <li v-for="(item,index) in list.focusList" :key="index" :class="[{'choosen': activePart === item._id}]">
-          <a :href="'/#/interest/user?userId='+item._id">
+        <li v-for="(item,index) in list" :key="index" :class="[{'choosen': activePart === item._id}]">
+          <a v-if="item.nickname" :href="'/#/interest/user?userId='+item._id">
             <img v-if="item.photo" :src="item.photo" alt="">
             <img v-else :src="defaultImg" alt="">
             <span class="name">{{item.nickname}}</span>
+          </a>
+          <a v-else :href="'/#/interest/collection?cid='+item._id">
+            <img v-if="item.photo" :src="item.photo" alt="">
+            <img v-else :src="defaultImg" alt="">
+            <span class="name">{{item.name}}</span>
           </a>
         </li>
       </ul>
@@ -98,10 +103,13 @@ export default {
       if (path.indexOf('moments') >= 0) {
         this.isActive = true
         this.activePart = 0
-      } else if (path.indexOf('user') >= 0) {
+      } else if (path.indexOf('user') >= 0 || path.indexOf('collection') >= 0) {
         let keys = this.$route.query
         if (keys.userId) {
           this.activePart = keys.userId
+          this.isActive = false
+        } else if (keys.cid) {
+          this.activePart = keys.cid
           this.isActive = false
         }
       }
@@ -122,7 +130,7 @@ export default {
         userId: this.userId
       }).then(res => {
         if (res.status === 200) {
-          this.list = res.data
+          this.list = res.data.fansList.concat(res.data.focusSubject)
         } else {
           this.$message.error('获取数据失败！')
         }

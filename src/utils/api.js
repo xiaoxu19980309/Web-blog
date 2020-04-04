@@ -32,6 +32,9 @@ const api = {
   deleteStore: '/api/operate/deleteStore', // 取消收藏
   staticNum: '/api/operate/staticNum', // 统计数据
   getLikeList: '/api/operate/getLikeList', // 获取喜欢文章列表
+  deleteIssues: '/api/operate/deleteIssues', // 删除发布的文章
+  getIssuesByTitle: '/api/operate/getIssuesByTitle', // 搜索文章标题
+  getPersonIssueTitle: '/api/operate/getPersonIssueTitle', // 获取个人文章
 
   changePro: '/api/user/changePro', // 修改个人信息
   changeBasic: '/api/user/changeBasic', // 修改基本信息
@@ -46,7 +49,14 @@ const api = {
 
   createSubject: '/api/subject/createSubject', // 新建专题
   getRecommondSubjects: '/api/subject/getRecommondSubjects', // 推荐专题列表
-  getSubjects: '/api/subject/getSubjects' // 获取专题列表
+  getSubjects: '/api/subject/getSubjects', // 获取专题列表
+  focusSubject: '/api/subject/focusSubject', // 关注专题
+  deleteSubject: '/api/subject/deleteSubject', // 删除专题
+  cancelFocusSubject: '/api/subject/cancelFocusSubject', // 取消关注专题
+  contributeSubject: '/api/subject/contributeSubject', // 专题投稿
+  contributeCheck: '/api/subject/contributeCheck', // 投稿审核
+  getContributions: '/api/subject/getContributions', // 获取审核列表
+  getSubjectList: '/api/subject/getSubjectList' // 管理员获取专题列表
 }
 
 export { api }

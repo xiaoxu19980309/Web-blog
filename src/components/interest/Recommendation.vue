@@ -40,9 +40,13 @@
         <ul class="add-follow-list">
           <li v-for="(item, index) in subjectList" :key="index">
             <div>
-              <el-button type="success" round>
+              <el-button v-if="!item.hasFocus" type="success" round @click="focusSubject(item)">
                 <i class="iconfont icon-jiahao1"></i>
                 关注
+              </el-button>
+              <el-button v-else type="info" round @click="cancelFocus(item)">
+                <i class="iconfont icon-jiahao1"></i>
+                已关注
               </el-button>
               <a href="" target="_blank" class="avatar">
                 <img v-if="item.photo" :src="item.photo" alt="">
@@ -53,7 +57,7 @@
                 <p class="color96">{{item.descripton}}</p>
                 <a href="" target="_blank">
                   <i class="iconfont icon-caidan1"></i>
-                  <span class="color96">159.7K篇文章 · 2620.5K人关注</span>
+                  <span class="color96">{{item.articleList.length}}篇文章 · {{item.fansList.length}}人关注</span>
                 </a>
               </div>
             </div>
@@ -158,11 +162,44 @@ export default {
           if (this.subjectList.length === 10) {
             this.hasmore2 = true
           }
+          this.subjectList.forEach(element => {
+            let hasFocus = false
+            element.fansList.forEach(ele => {
+              if (ele === this.userId) {
+                hasFocus = true
+              }
+            })
+            this.$set(element, 'hasFocus', hasFocus)
+          })
         } else {
           this.$message.error('获取失败！')
         }
       }).catch(e => {
 
+      })
+    },
+    focusSubject (item) {
+      this.axios.post(api.focusSubject, {userId: this.userId, subjectId: item._id}).then(res => {
+        if (res.status === 200) {
+          this.$message.success('关注成功！')
+          item.hasFocus = true
+        } else {
+          this.$message.error('关注失败!')
+        }
+      }).catch(e => {
+        console.log(e)
+      })
+    },
+    cancelFocus (item) {
+      this.axios.post(api.cancelFocusSubject, {userId: this.userId, subjectId: item._id}).then(res => {
+        if (res.status === 200) {
+          this.$message.success('取消关注成功！')
+          item.hasFocus = false
+        } else {
+          this.$message.error('取消失败!')
+        }
+      }).catch(e => {
+        console.log(e)
       })
     }
   }

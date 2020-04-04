@@ -45,7 +45,7 @@
       <div class="header-right">
         <el-button type="text" v-if="!isLogin" class="color999 marginX15" @click="handleClick(2)">登录</el-button>
         <el-button round v-if="!isLogin" class="marginX15" @click="handleClick(3)">注册</el-button>
-        <span v-if="isLogin" class="paddingX10">{{username}},欢迎您！</span>
+        <span v-if="isLogin" class="paddingX10">{{nickname}},欢迎您！</span>
         <el-popover
           placement="bottom"
           trigger="hover">
@@ -132,7 +132,7 @@ export default {
       activePart: 1,
       search: '',
       isLogin: false,
-      username: '',
+      nickname: '',
       isArticle: false,
       userId: '',
       imgurl: ''
@@ -143,7 +143,7 @@ export default {
     if (sessionStorage.getItem('user')) {
       this.isLogin = true
       let user = JSON.parse(sessionStorage.getItem('user'))
-      this.username = user.username
+      this.nickname = user.nickname
       this.userId = user.userId
       this.imgurl = user.img
     }

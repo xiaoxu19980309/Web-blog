@@ -23,7 +23,7 @@
         <li :class="[{'choosen': active === 4}]" @click="handleClick(4)">
           <a href="/#/message/others">
             <i class="iconfont icon-more"></i>
-            <span>其它提醒</span>
+            <span>投稿提示</span>
           </a>
         </li>
       </ul>
