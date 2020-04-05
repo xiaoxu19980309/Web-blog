@@ -23,7 +23,13 @@
         <li :class="[{'choosen': active === 4}]" @click="handleClick(4)">
           <a href="/#/message/others">
             <i class="iconfont icon-more"></i>
-            <span>投稿提示</span>
+            <span>投稿消息</span>
+          </a>
+        </li>
+        <li :class="[{'choosen': active === 5}]" @click="handleClick(5)">
+          <a href="/#/message/CallBack">
+            <i class="iconfont icon-more"></i>
+            <span>投稿回复</span>
           </a>
         </li>
       </ul>
@@ -57,8 +63,10 @@ export default {
         this.active = 2
       } else if (path.indexOf('likepraise') >= 0) {
         this.active = 3
-      } else {
+      } else if (path.indexOf('others') >= 0) {
         this.active = 4
+      } else {
+        this.active = 5
       }
     },
     handleClick (num) {
@@ -70,6 +78,8 @@ export default {
         case 3: this.active = 3
           break
         case 4: this.active = 4
+          break
+        case 5: this.active = 5
           break
       }
     }

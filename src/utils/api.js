@@ -50,12 +50,15 @@ const api = {
   createSubject: '/api/subject/createSubject', // 新建专题
   getRecommondSubjects: '/api/subject/getRecommondSubjects', // 推荐专题列表
   getSubjects: '/api/subject/getSubjects', // 获取专题列表
+  getSubjectArticleList: '/api/subject/getSubjectArticleList', // 获取专题文章列表
+  deleteSubArticle: '/api/subject/deleteSubArticle', // 删除专题文章
   focusSubject: '/api/subject/focusSubject', // 关注专题
   deleteSubject: '/api/subject/deleteSubject', // 删除专题
   cancelFocusSubject: '/api/subject/cancelFocusSubject', // 取消关注专题
   contributeSubject: '/api/subject/contributeSubject', // 专题投稿
   contributeCheck: '/api/subject/contributeCheck', // 投稿审核
   getContributions: '/api/subject/getContributions', // 获取审核列表
+  getContributionBack: '/api/subject/getContributionBack', // 获取审核结果列表
   getSubjectList: '/api/subject/getSubjectList' // 管理员获取专题列表
 }
 

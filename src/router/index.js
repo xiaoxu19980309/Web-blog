@@ -14,6 +14,7 @@ import Comments from '@/components/message/Comments'
 import Follows from '@/components/message/Follows'
 import LikePraise from '@/components/message/LikePraise'
 import Others from '@/components/message/Others'
+import CallBack from '@/components/message/CallBack'
 
 import Interest from '@/components/Interest'
 import Recommendation from '@/components/interest/Recommendation'
@@ -121,6 +122,11 @@ const router = new Router({
           path: '/message/others',
           name: 'Others',
           component: Others
+        },
+        {
+          path: '/message/callback',
+          name: 'CallBack',
+          component: CallBack
         }]
       },
       {
