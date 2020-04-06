@@ -48,14 +48,14 @@
                 <i class="iconfont icon-jiahao1"></i>
                 已关注
               </el-button>
-              <a href="" target="_blank" class="avatar">
+              <a :href="'/#/collection_main?cid='+item._id" target="_blank" class="avatar">
                 <img v-if="item.photo" :src="item.photo" alt="">
                 <img v-else :src="defaultImg" alt="">
               </a>
               <div class="description">
-                <a href="" class="name">{{item.name}}</a>
+                <a :href="'/#/collection_main?cid='+item._id" class="name">{{item.name}}</a>
                 <p class="color96">{{item.descripton}}</p>
-                <a href="" target="_blank">
+                <a target="_blank">
                   <i class="iconfont icon-caidan1"></i>
                   <span class="color96">{{item.articleList.length}}篇文章 · {{item.fansList.length}}人关注</span>
                 </a>

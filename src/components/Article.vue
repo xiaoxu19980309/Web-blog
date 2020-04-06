@@ -1,7 +1,9 @@
 <template>
   <div class="_article textAlignLeft colorf9bg">
     <div class="bgcolorWhite" style="padding: 20px 24px">
-      <h1 class="_titleText">{{title}}</h1>
+      <div class="_titleText">{{title}}
+        <a v-if="!isResend" class="fontSize14 fontWeightNormal btn btn-default">原创</a>
+      </div>
       <div class="info margin10X">
         <div class="content">
           <a :href="'/#/user?userId='+user._id" target="_blank">
@@ -13,7 +15,7 @@
               <span class="fs16fw5mr8">
                 <a :href="'/#/user?userId='+user._id" target="_blank">{{user.nickname}}</a>
               </span>
-              <a class="btn btn-hollow">关注</a>
+              <a v-if="!isWriter" class="btn btn-hollow" @click="concern()">关注</a>
             </div>
             <div class="Flex color96">
               <span class="marginRight10">{{time}}  字数 {{length}}</span>
@@ -33,13 +35,14 @@
           </div>
         </div>
         <div class="dfaic">
-          <a>
+          <!-- <a>
             <i class="iconfont icon-wenzhang2"></i>
             <span>日记本</span>
-          </a>
+          </a> -->
           <el-popover placement="top" trigger="click">
           <ul>
             <li><el-button type="text" @click="collectArticle">收藏文章</el-button></li>
+            <li><el-button type="text" v-if="!isWriter" @click="resendArticle">转发</el-button></li>
           </ul>
           <div class="iconbtn" slot="reference">
             <i class="iconfont icon-more"></i>
@@ -163,6 +166,7 @@ export default {
       hasLikes: false,
       isWriter: false, // 是否是作者
       replyShow: false, // 回复按钮是否显示
+      isResend: false, // 是否为转发
       articleId: '',
       userId: '',
       title: '',
@@ -194,25 +198,28 @@ export default {
       this.countNum = res.data.likesList.length
       this.length = res.data.content_text.length
       this.user = res.data.userId
+      this.isResend = res.data.isResend
       this.commentList = res.data.commentList
       if (this.user._id === this.userId) {
         this.isWriter = true
       }
     }).then(() => {
-      this.getLike().then(res => {
-        if (res.data) {
-          this.hasLikes = true
-          if (res.data.status === 1) {
-            this.isActive1 = true
-          } else if (res.data.status === 2) {
-            this.isActive2 = true
+      if (this.userId) {
+        this.getLike().then(res => {
+          if (res.data) {
+            this.hasLikes = true
+            if (res.data.status === 1) {
+              this.isActive1 = true
+            } else if (res.data.status === 2) {
+              this.isActive2 = true
+            }
+          } else {
+            this.hasLikes = false
           }
-        } else {
-          this.hasLikes = false
-        }
-      }).catch(e => {
+        }).catch(e => {
 
-      })
+        })
+      }
     }).catch(e => {
 
     })
@@ -448,6 +455,30 @@ export default {
         }
       }).catch(e => {
 
+      })
+    },
+    resendArticle () {
+      this.axios.post(api.resendArticle, {
+        userId: this.userId,
+        articleId: this.articleId
+      }).then(res => {
+        if (res.status === 200) {
+          this.$message.success('转发成功！')
+        } else {
+          this.$message.error('转发失败！')
+        }
+      }).catch(e => {
+      })
+    },
+    concern () {
+      this.axios.post(api.focusUser, {userId: this.userId, focusId: this.user._id}).then(res => {
+        if (res.status === 200) {
+          this.$message.success(res.msg)
+        } else {
+          this.$message.error('关注失败！')
+        }
+      }).catch(e => {
+        console.log(e)
       })
     }
   }

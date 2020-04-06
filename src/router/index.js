@@ -29,6 +29,7 @@ import Profile from '@/components/setting/Profile'
 import Search from '@/components/Search'
 import Sarticle from '@/components/search/Sarticle'
 import Suser from '@/components/search/Suser'
+import Ssubject from '@/components/search/Ssubject'
 
 Vue.use(Router)
 const vm = new Vue()
@@ -143,6 +144,11 @@ const router = new Router({
           path: '/search/suser',
           name: 'Suser',
           component: Suser
+        },
+        {
+          path: '/search/ssubject',
+          name: 'Ssubject',
+          component: Ssubject
         }]
       },
       {

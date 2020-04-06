@@ -15,15 +15,9 @@
           </a>
         </li>
         <li :class="[{'choosen': active === 3}]" @click="handleClick(3)">
-          <a :href="'/#/search/likepraise?q='+q">
+          <a :href="'/#/search/ssubject?q='+q">
             <i class="iconfont icon-caidan"></i>
             <span>专题</span>
-          </a>
-        </li>
-        <li :class="[{'choosen': active === 4}]" @click="handleClick(4)">
-          <a :href="'/#/search/others?q='+q">
-            <i class="iconfont icon-more"></i>
-            <span>文集</span>
           </a>
         </li>
       </ul>
@@ -58,10 +52,8 @@ export default {
         this.active = 1
       } else if (path.indexOf('suser') >= 0) {
         this.active = 2
-      } else if (path.indexOf('likepraise') >= 0) {
+      } else if (path.indexOf('ssubject') >= 0) {
         this.active = 3
-      } else {
-        this.active = 4
       }
     },
     handleClick (num) {
@@ -71,8 +63,6 @@ export default {
         case 2: this.active = 2
           break
         case 3: this.active = 3
-          break
-        case 4: this.active = 4
           break
       }
     }

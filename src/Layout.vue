@@ -47,6 +47,7 @@
         <el-button round v-if="!isLogin" class="marginX15" @click="handleClick(3)">注册</el-button>
         <span v-if="isLogin" class="paddingX10">{{nickname}},欢迎您！</span>
         <el-popover
+          v-if="isLogin"
           placement="bottom"
           trigger="hover">
             <ul>

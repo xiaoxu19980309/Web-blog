@@ -4,6 +4,7 @@ const api = {
   register: '/api/common/register', // 注册
   find: '/api/common/find', // 发现
   feedback: '/api/user/feedback', // 反馈
+  getArticle: '/api/common/getArticle', // 获取文章详情
 
   getCollections: '/api/article/getCollections', // 获取文集列表
   getCollectionDetail: '/api/article/getCollectionDetail', // 获取文集详情
@@ -14,8 +15,8 @@ const api = {
   deleteArticle: '/api/article/deleteArticle', // 删除文章
   updateArticle: '/api/article/updateArticle', // 修改文章
   insertIssue: '/api/article/insertIssue', // 发布文章
+  resendArticle: '/api/article/resendArticle', // 转发文章
   getHomePage: '/api/article/getHomePage', // 获取个人主页
-  getArticle: '/api/article/getArticle', // 获取文章详情
   getComments: '/api/article/getComments', // 获取文章评论
   insertComment: '/api/article/insertComment', // 发表评论
   insertReply: '/api/article/insertReply', // 发表回复
@@ -59,6 +60,8 @@ const api = {
   contributeCheck: '/api/subject/contributeCheck', // 投稿审核
   getContributions: '/api/subject/getContributions', // 获取审核列表
   getContributionBack: '/api/subject/getContributionBack', // 获取审核结果列表
+  getContributionAll: '/api/subject/getContributionAll', // 获取管理员审核列表
+  deleteContribution: '/api/subject/deleteContribution', // 删除投稿记录
   getSubjectList: '/api/subject/getSubjectList' // 管理员获取专题列表
 }
 

@@ -1,25 +1,24 @@
 <template>
   <div class="_follows" v-loading.lock="isLoading">
     <div class="_mestitles">
-      文章
+      专题
       <ul class="note-list" v-if="list.length!=0">
         <div>
           <li v-for="(item, index) in list" :key="index">
             <div class="content">
               <div class="author">
-                <a :href="'/#/user?userId='+item.userId._id" class="avatar">
+                <a :href="'/#/user?userId='+item.userId._id" class="avatar" target="_blank">
                 <img :src="item.userId.photo" alt=""></a>
                 <div class="info">
-                  <a :href="'/#/user?userId='+item.userId._id">{{item.userId.nickname}}</a>
-                  <span class="color96">{{item.gmt_modified}}</span>
+                  <a :href="'/#/user?userId='+item.userId._id"  target="_blank">{{item.userId.nickname}}</a>
+                  <span class="color96">{{item.gmt_create}}</span>
                 </div>
               </div>
-              <a :href="'/#/article?articleId='+item._id" target="_blank" class="title">{{item.title}}</a>
-              <p class="abstract" v-text="item.content_text.substr(0,80)"></p>
+              <a :href="'/#/collection_main?cid='+item._id" target="_blank" class="title">{{item.name}}</a>
+              <p class="abstract" v-text="item.description.substr(0,80)"></p>
               <div class="meta">
-                <!-- <a href="" target="_blank"><i class="iconfont icon-yanjing marginX5"></i>9</a> -->
-                <a href="" target="_blank"><i class="iconfont icon-pinglun1 marginX5"></i>{{item.commentList.length}}</a>
-                <span><i class="iconfont icon-aixin1 color96 marginX5"></i>{{item.likesList.length}}</span>
+                <i class="iconfont icon-caidan1"></i>
+                <span class="color96">{{item.articleList.length}}篇文章 · {{item.fansList.length}}人关注</span>
               </div>
             </div>
           </li>
@@ -37,7 +36,7 @@
 import nothing from '@/assets/nofind.png'
 import { api } from '@/utils/api'
 export default {
-  name: 'Sarticle',
+  name: 'Ssubject',
   data () {
     return {
       nothing,
@@ -65,7 +64,7 @@ export default {
     },
     getData () {
       this.isLoading = true
-      this.axios.post(api.getIssuesByTitle, {title: this.q}).then(res => {
+      this.axios.post(api.getSubjectList, {name: this.q}).then(res => {
         this.isLoading = false
         if (res.status === 200) {
           this.list = res.data

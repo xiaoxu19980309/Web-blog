@@ -61,7 +61,7 @@ export default {
       this.axios.post(api.getUserByName, { name: this.q }).then(res => {
         this.isLoading = false
         if (res.status === 200) {
-          this.list = res.data
+          this.list = res.data ? res.data : []
           this.list.forEach(element => {
             let textCount = 0
             let likeCount = 0
