@@ -36,6 +36,7 @@ const api = {
   deleteIssues: '/api/operate/deleteIssues', // 删除发布的文章
   getIssuesByTitle: '/api/operate/getIssuesByTitle', // 搜索文章标题
   getPersonIssueTitle: '/api/operate/getPersonIssueTitle', // 获取个人文章
+  getAllComments: '/api/operate/getAllComments', // 获取所有评论
 
   changePro: '/api/user/changePro', // 修改个人信息
   changeBasic: '/api/user/changeBasic', // 修改基本信息
