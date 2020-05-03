@@ -55,7 +55,7 @@
         </li>
       </ul>
       <div class="bottom el-col-4">
-          <el-popover
+          <!-- <el-popover
             placement="top-end"
             trigger="click"
           >
@@ -77,7 +77,7 @@
             <i class="el-icon-menu"></i>
             <span>设置</span>
           </span>
-          </el-popover>
+          </el-popover> -->
         <span class="hasproblem" @click="hasProblem">
           遇到问题
           <i class="iconfont icon-icon-test"></i>
@@ -219,7 +219,12 @@ export default {
       collections: [],
       articleTitle: '无标题文章',
       hasSaved: true,
-      countNum: 0
+      isfirst1: true,
+      isfirst2: true,
+      countChange1: false,
+      countChange2: false,
+      timeOut1: '',
+      timeOut2: ''
     }
   },
   watch: {
@@ -235,26 +240,33 @@ export default {
     },
     articleTitle (newVal, oldVal) {
       console.log(oldVal, '///', newVal, '////')
-      if (this.countNum === 0) {
-        this.countNum++
+      if (this.isfirst1) {
+        this.isfirst1 = false
+        return
+      }
+      if (this.countChange1) {
+        clearTimeout(this.timeOut1)
+        this.countChange1 = false
         return
       }
       this.currentItem.articleList[this.currentIndex2].title = newVal
-      setTimeout(() => {
+      this.timeOut1 = setTimeout(() => {
         this.hasSaved = false
+        this.countChange1 = true
         this.axios.post(api.updateArticle, {
           articleId: this.currentItem.articleList[this.currentIndex2]._id,
           title: newVal
         }).then(res => {
           if (res.status === 200) {
             this.hasSaved = true
+            this.countChange1 = false
           } else {
             this.$message.error('保存失败！')
           }
         }).catch(e => {
           console.log(e)
         })
-      }, 2000)
+      }, 5000)
     }
   },
   mounted () {
@@ -449,13 +461,19 @@ export default {
 
     },
     onEditorChange ({ quill, html, text }) {
-      if (this.countNum === 1) {
-        this.countNum++
+      if (this.isfirst2) {
+        this.isfirst2 = false
+        return
+      }
+      if (this.countChange2) {
+        clearTimeout(this.timeOut2)
+        this.countChange2 = false
         return
       }
       this.editContentText = text
-      setTimeout(() => {
+      this.timeOut2 = setTimeout(() => {
         this.hasSaved = false
+        this.countChange2 = true
         this.axios.post(api.updateArticle, {
           articleId: this.currentItem.articleList[this.currentIndex2]._id,
           content: html,
@@ -463,13 +481,14 @@ export default {
         }).then(res => {
           if (res.status === 200) {
             this.hasSaved = true
+            this.countChange2 = false
           } else {
             this.$message.error('保存失败！')
           }
         }).catch(e => {
           console.log(e)
         })
-      }, 2000)
+      }, 5000)
     }
   }
 }
