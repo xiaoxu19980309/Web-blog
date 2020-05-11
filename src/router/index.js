@@ -4,6 +4,7 @@ import Login from '@/components/Login'
 import Layout from '@/Layout'
 import Home from '@/components/Home'
 import Write from '@/components/Write'
+import Recycle from '@/components/Recycle'
 import Article from '@/components/Article'
 import Help from '@/components/Help'
 import BookMarks from '@/components/BookMarks'
@@ -52,6 +53,11 @@ const router = new Router({
       path: '/write',
       name: 'Write',
       component: Write
+    },
+    {
+      path: '/recycle',
+      name: 'Recycle',
+      component: Recycle
     },
     {
       path: '/help',

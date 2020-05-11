@@ -7,12 +7,15 @@ const api = {
   getArticle: '/api/common/getArticle', // 获取文章详情
 
   getCollections: '/api/article/getCollections', // 获取文集列表
+  getGarbage: '/api/article/getGarbage', // 获取回收站
   getCollectionDetail: '/api/article/getCollectionDetail', // 获取文集详情
   addCollection: '/api/article/insertCollection', // 新建文集
   editCollection: '/api/article/editCollection', // 修改文集
   deleteCollection: '/api/article/deleteCollection', // 删除文集
   addArticle: '/api/article/insertArticle', // 新建文章
   deleteArticle: '/api/article/deleteArticle', // 删除文章
+  deleteArticleGarbage: '/api/article/deleteArticleGarbage', // 彻底删除
+  recoverArticle: '/api/article/recoverArticle', // 恢复文章
   updateArticle: '/api/article/updateArticle', // 修改文章
   insertIssue: '/api/article/insertIssue', // 发布文章
   resendArticle: '/api/article/resendArticle', // 转发文章

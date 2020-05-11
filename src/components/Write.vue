@@ -55,19 +55,19 @@
         </li>
       </ul>
       <div class="bottom el-col-4">
-          <!-- <el-popover
+          <el-popover
             placement="top-end"
-            trigger="click"
+            trigger="hover"
           >
           <span>
             <ul class="ul_demo">
               <li>
-                <el-button type="text" style="color: #666;width: 100%;padding:12px;" onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'">
+                <el-button type="text" style="color: #666;width: 100%;padding:12px;" @click="toGarbage" onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'">
                   <i class="el-icon-delete" style="margin-right: 8px"></i>回车站
                 </el-button>
               </li>
               <li>
-                <el-button type="text" style="color: #666;width: 100%" onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'">
+                <el-button type="text" style="color: #666;width: 100%" @click="toHelp" onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'">
                   <i class="iconfont icon-icon-test" style="margin-right: 8px"></i>帮助与反馈
                 </el-button>
               </li>
@@ -77,7 +77,7 @@
             <i class="el-icon-menu"></i>
             <span>设置</span>
           </span>
-          </el-popover> -->
+          </el-popover>
         <span class="hasproblem" @click="hasProblem">
           遇到问题
           <i class="iconfont icon-icon-test"></i>
@@ -279,14 +279,21 @@ export default {
     this.getList()
   },
   methods: {
-    getList () {
+    getList (type) {
       this.axios.post(api.getCollections).then(res => {
         if (res.status === 200) {
           this.collections = res.data
-          if (this.collections.length > 0) {
-            this.currentItem = this.collections[0]
-          }
-          if (this.currentItem.articleList.length >= 1) {
+          if (type !== 2) {
+            if (this.collections.length > 0) {
+              this.currentItem = this.collections[0]
+            }
+            if (this.currentItem.articleList.length >= 1) {
+              this.hasArticle = true
+              this.articleTitle = this.currentItem.articleList[0].title
+              this.editContent = this.currentItem.articleList[0].content.toString()
+            }
+          } else {
+            this.currentItem = this.collections[this.currentIndex1]
             this.hasArticle = true
             this.articleTitle = this.currentItem.articleList[0].title
             this.editContent = this.currentItem.articleList[0].content.toString()
@@ -361,7 +368,7 @@ export default {
     },
     deleteClass (item) {
       let _this = this
-      this.$confirm('确定删除该文集？(删除文集该文集下的所有文章都将被删除)', '提示', {
+      this.$confirm('确定删除该文集？(删除文集该文集下的所有文章都将被删除，并且无法找回)', '提示', {
         confirmTextButton: '确定',
         cancelTextButton: '取消',
         type: 'warning'
@@ -391,10 +398,9 @@ export default {
       }).then(res => {
         if (res.status === 200) {
           this.currentItem.articleList.splice(type === 1 ? 0 : this.currentItem.articleList.length - 1, 0, {title: '无标题文章'})
-          console.log(this.currentItem.articleList, 'ads')
           this.articleTitle = '无标题文章'
           this.$message.success('新建成功！')
-          this.getList()
+          this.getList(2)
         } else {
           this.$message.error('新建失败!')
         }
@@ -453,6 +459,12 @@ export default {
       }).catch(e => {
         console.log(e)
       })
+    },
+    toHelp () {
+      this.$router.push({path: '/help'})
+    },
+    toGarbage () {
+      this.$router.push({path: '/recycle'})
     },
     onEditorBlur (quill) {
       console.log(quill)

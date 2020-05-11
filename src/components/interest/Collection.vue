@@ -146,8 +146,11 @@
               <span>{{item.gmt_create}}</span>
             </div>
           </div>
-          <div class="disinline">
+          <div v-if="item.isResend==null||item.isResend==false" class="disinline">
             <el-button type="danger" round style="vertical-align: bottom" @click="contribution(item)">投稿</el-button>
+          </div>
+          <div v-else class="disinline">
+            <el-button type="text" disabled>转载文章不可投稿</el-button>
           </div>
         </li>
       </ul>
