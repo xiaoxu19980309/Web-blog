@@ -55,6 +55,7 @@ const api = {
   createSubject: '/api/subject/createSubject', // 新建专题
   getRecommondSubjects: '/api/subject/getRecommondSubjects', // 推荐专题列表
   getSubjects: '/api/subject/getSubjects', // 获取专题列表
+  getLikedSubjects: '/api/subject/getLikedSubjects', // 获取喜欢的专题列表
   getSubjectArticleList: '/api/subject/getSubjectArticleList', // 获取专题文章列表
   deleteSubArticle: '/api/subject/deleteSubArticle', // 删除专题文章
   focusSubject: '/api/subject/focusSubject', // 关注专题

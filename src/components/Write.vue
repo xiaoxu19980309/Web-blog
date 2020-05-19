@@ -161,6 +161,7 @@
         </div>
       </el-col>
     </el-col>
+    <input type="file" ref="uploadFile" id="upload" style="display: none" @change="upload">
     <el-dialog
       title="常见问题"
       width="30%"
@@ -195,6 +196,26 @@
 import { api } from '@/utils/api'
 import { quillEditor } from 'vue-quill-editor'
 import { addQuillTitle } from '@/utils/quill-title.js'
+// 工具栏配置
+const toolbarOptions = [
+  ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+  ['blockquote', 'code-block'],
+
+  [{'header': 1}, {'header': 2}], // custom button values
+  [{'list': 'ordered'}, {'list': 'bullet'}],
+  [{'script': 'sub'}, {'script': 'super'}], // superscript/subscript
+  [{'indent': '-1'}, {'indent': '+1'}], // outdent/indent
+  [{'direction': 'rtl'}], // text direction
+
+  [{'size': ['small', false, 'large', 'huge']}], // custom dropdown
+  [{'header': [1, 2, 3, 4, 5, 6, false]}],
+
+  [{'color': []}, {'background': []}], // dropdown with defaults from theme
+  [{'font': []}],
+  [{'align': []}],
+  ['link', 'image', 'video'],
+  ['clean']// remove formatting button
+]
 export default {
   name: 'Write',
   components: {
@@ -214,7 +235,20 @@ export default {
       currentIndex1: 0,
       currentIndex2: 0,
       editorOption: {
-
+        modules: {
+          toolbar: {
+            container: toolbarOptions, // 工具栏
+            handlers: {
+              'image': function (value) {
+                if (value) {
+                  document.getElementById('upload').click()
+                } else {
+                  this.quill.format('image', false)
+                }
+              }
+            }
+          }
+        }
       },
       collections: [],
       articleTitle: '无标题文章',
@@ -229,7 +263,6 @@ export default {
   },
   watch: {
     currentIndex1 (newVal, oldVal) {
-      console.log(oldVal, '///', newVal, '////')
       if (this.collections[newVal].articleList.length >= 1) {
         this.hasArticle = true
         this.articleTitle = this.collections[newVal].articleList[0].title
@@ -266,7 +299,7 @@ export default {
         }).catch(e => {
           console.log(e)
         })
-      }, 5000)
+      }, 1000)
     }
   },
   mounted () {
@@ -467,7 +500,7 @@ export default {
       this.$router.push({path: '/recycle'})
     },
     onEditorBlur (quill) {
-      console.log(quill)
+
     },
     onEditorFocus (quill) {
 
@@ -500,7 +533,35 @@ export default {
         }).catch(e => {
           console.log(e)
         })
-      }, 5000)
+      }, 1000)
+    },
+    changePhoto () {
+      this.$refs.uploadFile.click()
+    },
+    upload (event) {
+      let files = event.target.files
+      if (!files.length) {
+        return
+      }
+      let param = new FormData()
+      param.append('file', files[0])
+      let config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+      this.axios.post(api.upload, param, config).then(res => {
+        if (res.status === 200) {
+          this.$message.success('上传成功！')
+          this.editContent += '<img src="' + res.data + '"/>'
+          this.this.editContentText += '<img src="' + res.data + '"/>'
+        } else {
+          this.$message.error('上传失败！')
+        }
+      }).catch(e => {
+        console.log(e)
+      })
+      this.$refs.uploadFile.value = null
     }
   }
 }

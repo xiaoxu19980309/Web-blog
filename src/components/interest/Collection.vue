@@ -35,26 +35,21 @@
         <el-tabs v-model="activeName" v-loading.lock="isLoading">
           <el-tab-pane name="first">
             <span slot="label"><i class="iconfont icon-wenzhang2 marginX5"></i>最新发布</span>
-            <ul class="note-list">
+            <ul class="note-list" v-if="newPublish.length!==0">
               <div>
                 <li class="has-img" v-for="(item, index) in newPublish" :key="index">
-                  <!-- <a href="" target="_blank" class="warp-img">
-                    <img src="../../assets/logo.png" alt="">
-                  </a> -->
                   <div class="content">
                     <a :href="'/#/article?articleId='+item._id" target="_blank" class="title">{{item.title}}</a>
-                    <p class="abstract" v-text="item.content"></p>
+                    <p class="abstract" v-text="item.content_text"></p>
                     <div class="meta">
-                      <a href="" target="_blank"><i class="iconfont icon-yanjing marginX5"></i>9</a>
-                      <a href="" target="_blank"><i class="iconfont icon-pinglun1 marginX5"></i>0</a>
-                      <span><i class="iconfont icon-aixin1 color96 marginX5"></i>1</span>
-                      <span>5小时前</span>
+                      <a><i class="iconfont icon-pinglun1 marginX5"></i>{{item.commentList.length}}</a>
+                      <span><i class="iconfont icon-aixin1 color96 marginX5"></i>{{item.likesList.length}}</span>
                     </div>
                   </div>
                 </li>
               </div>
             </ul>
-            <div v-if="newPublish.length===0" class="find-noting">
+            <div v-else class="find-noting">
               <img :src="nothing" alt="找不到结果">
               <div>这里还没有内容~</div>
             </div>
@@ -63,26 +58,24 @@
           </el-tab-pane>
           <el-tab-pane name="second">
             <span slot="label"><i class="iconfont icon-wenzhang-copy marginX5"></i>最新评论</span>
-            <ul class="note-list">
+            <ul class="note-list" v-if="newComment.length!==0">
               <div>
-                <li class="has-img">
-                  <a href="" target="_blank" class="warp-img">
+                <li class="has-img" v-for="(item, index) in newComment" :key="index">
+                  <!-- <a href="" target="_blank" class="warp-img">
                     <img src="../../assets/logo.png" alt="">
-                  </a>
+                  </a> -->
                   <div class="content">
-                    <a href="" target="_blank" class="title">分叉的市场下，数字货币与区块链开始脱钩</a>
-                    <p class="abstract">文/孟永辉 比特币价格再度突破一万美元、孙宇晨与巴菲特共同进餐的消息再度引发了人们关注。有人说，即使是在肺炎疫情的影响之下，依然可以通...</p>
+                    <a :href="'/#/article?articleId='+item._id" target="_blank" class="title">{{item.title}}</a>
+                    <p class="abstract" v-text="item.content_text"></p>
                     <div class="meta">
-                      <a href="" target="_blank"><i class="iconfont icon-yanjing marginX5"></i>9</a>
-                      <a href="" target="_blank"><i class="iconfont icon-pinglun1 marginX5"></i>0</a>
-                      <span><i class="iconfont icon-aixin1 color96 marginX5"></i>1</span>
-                      <span>5小时前</span>
+                      <a><i class="iconfont icon-pinglun1 marginX5"></i>{{item.commentList.length}}</a>
+                      <span><i class="iconfont icon-aixin1 color96 marginX5"></i>{{item.likesList.length}}</span>
                     </div>
                   </div>
                 </li>
               </div>
             </ul>
-            <div v-if="newComment.length===0" class="find-noting">
+            <div v-else class="find-noting">
               <img :src="nothing" alt="找不到结果">
               <div>这里还没有内容~</div>
             </div>
@@ -90,26 +83,24 @@
           </el-tab-pane>
           <el-tab-pane name="third">
             <span slot="label"><i class="iconfont icon-huo1 marginX5"></i>热门</span>
-            <ul class="note-list" v-if="false">
+            <ul class="note-list" v-if="hotList.length!==0">
               <div>
-                <li class="has-img">
-                  <a href="" target="_blank" class="warp-img">
+                <li class="has-img" v-for="(item, index) in hotList" :key="index">
+                  <!-- <a href="" target="_blank" class="warp-img">
                     <img src="../../assets/logo.png" alt="">
-                  </a>
+                  </a> -->
                   <div class="content">
-                    <a href="" target="_blank" class="title">分叉的市场下，数字货币与区块链开始脱钩</a>
-                    <p class="abstract">文/孟永辉 比特币价格再度突破一万美元、孙宇晨与巴菲特共同进餐的消息再度引发了人们关注。有人说，即使是在肺炎疫情的影响之下，依然可以通...</p>
+                    <a :href="'/#/article?articleId='+item._id" target="_blank" class="title">{{item.title}}</a>
+                    <p class="abstract" v-text="item.content_text"></p>
                     <div class="meta">
-                      <a href="" target="_blank"><i class="iconfont icon-yanjing marginX5"></i>9</a>
-                      <a href="" target="_blank"><i class="iconfont icon-pinglun1 marginX5"></i>0</a>
-                      <span><i class="iconfont icon-aixin1 color96 marginX5"></i>1</span>
-                      <span>5小时前</span>
+                      <a><i class="iconfont icon-pinglun1 marginX5"></i>{{item.commentList.length}}</a>
+                      <span><i class="iconfont icon-aixin1 color96 marginX5"></i>{{item.likesList.length}}</span>
                     </div>
                   </div>
                 </li>
               </div>
             </ul>
-            <div v-if="hotList.length===0" class="find-noting">
+            <div v-else class="find-noting">
               <img :src="nothing" alt="找不到结果">
               <div>这里还没有内容~</div>
             </div>
@@ -187,6 +178,15 @@ export default {
       searchName: ''
     }
   },
+  watch: {
+    activeName (newVal, oldVal) {
+      if (newVal === 'second') {
+        this.getPage(2)
+      } else if (newVal === 'third') {
+        this.getPage(3)
+      }
+    }
+  },
   mounted () {
     let keys = this.$route.query
     this.cid = keys.cid
@@ -194,15 +194,36 @@ export default {
       let user = JSON.parse(sessionStorage.getItem('user'))
       this.userId = user.userId
     }
-    this.getPage()
+    this.getPage(1)
   },
   methods: {
-    getPage () {
+    getPage (type) {
       this.isLoading = true
-      this.axios.post(api.getCollectionDetail, { cid: this.cid }).then(res => {
+      this.axios.post(api.getCollectionDetail, { cid: this.cid, type: type }).then(res => {
         this.isLoading = false
         if (res.status === 200) {
-          this.newPublish = res.data.articleList
+          if (type === 1) {
+            this.newPublish = res.data.articleList
+            this.newPublish.forEach(item => {
+              if (item.content_text.length > 40) {
+                item.content_text = item.content_text.substr(0, 40) + '...'
+              }
+            })
+          } else if (type === 2) {
+            this.newComment = res.data.articleList
+            this.newComment.forEach(item => {
+              if (item.content_text.length > 40) {
+                item.content_text = item.content_text.substr(0, 40) + '...'
+              }
+            })
+          } else if (type === 3) {
+            this.hotList = res.data.articleList
+            this.hotList.forEach(item => {
+              if (item.content_text.length > 40) {
+                item.content_text = item.content_text.substr(0, 40) + '...'
+              }
+            })
+          }
           this.info = res.data
           this.user = res.data.userId
           if (this.user._id === this.userId) {
@@ -211,11 +232,6 @@ export default {
           res.data.fansList.forEach(element => {
             if (element === this.userId) {
               this.hasFollow = true
-            }
-          })
-          this.newPublish.forEach(item => {
-            if (item.content.length > 40) {
-              item.content = item.content.substr(0, 40) + '...'
             }
           })
         } else {

@@ -42,31 +42,39 @@
         <el-tabs v-if="activePart==='first'" v-model="activeName" v-loading.lock="isLoading">
           <el-tab-pane name="first">
             <span slot="label"><i class="iconfont icon-wenzhang2 marginX5"></i>关注的专题/文集</span>
-            <ul class="note-list" v-if="likeCollection.length!=0">
-              <div>
-                <li class="has-img" v-for="(item, index) in likeCollection" :key="index">
-                  <a href="" target="_blank" class="warp-img">
-                    <!-- <img src="../../assets/logo.png" alt=""> -->
+            <ul class="add-follow-list" v-if="likedSubjects.length!==0">
+              <li v-for="(item, index) in likedSubjects" :key="index">
+                <div>
+                  <el-button v-if="!item.hasFocus" type="success" round @click="focusSubject(item)">
+                    <i class="iconfont icon-jiahao1"></i>
+                    关注
+                  </el-button>
+                  <el-button v-else type="info" round @click="cancelFocus(item)">
+                    <i class="iconfont icon-jiahao1"></i>
+                    已关注
+                  </el-button>
+                  <a :href="'/#/collection_main?cid='+item._id" target="_blank" class="avatar">
+                    <img v-if="item.photo" :src="item.photo" alt="">
+                    <img v-else :src="defaultImg" alt="">
                   </a>
-                  <div class="content">
-                    <a :href="'/#/article?articleId='+item._id" target="_blank" class="title">{{item.title}}</a>
-                    <p class="abstract" v-text="item.content_text"></p>
-                    <div class="meta">
-                      <!-- <a href="" target="_blank"><i class="iconfont icon-yanjing marginX5"></i>9</a> -->
-                      <a href="" target="_blank"><i class="iconfont icon-pinglun1 marginX5"></i>{{item.commentsCount}}</a>
-                      <span><i class="iconfont icon-aixin1 color96 marginX5"></i>{{item.likesCount}}</span>
-                      <span>{{item.gmt_create}}</span>
-                    </div>
+                  <div class="description">
+                    <a :href="'/#/collection_main?cid='+item._id" class="name">{{item.name}}</a>
+                    <p class="color96">{{item.descripton}}</p>
+                    <a target="_blank">
+                      <i class="iconfont icon-caidan1"></i>
+                      <span class="color96">{{item.articleList.length}}篇文章 · {{item.fansList.length}}人关注</span>
+                    </a>
+                    <p>简介：{{item.description}}</p>
                   </div>
-                </li>
-              </div>
+                </div>
+              </li>
             </ul>
-            <el-backtop target=".el-header"></el-backtop>
-            <el-button type="info" round class="load-more" v-if="hasmore1">阅读更多</el-button>
-            <div class="find-noting" v-if="likeCollection.length===0">
+            <div class="find-noting" v-else>
               <img :src="nothing" alt="找不到结果">
               <div>这里还没有内容~</div>
             </div>
+            <el-backtop target=".el-header"></el-backtop>
+            <el-button type="info" round class="load-more" v-if="hasmore1">阅读更多</el-button>
           </el-tab-pane>
           <el-tab-pane name="second">
             <span slot="label"><i class="iconfont icon-wenzhang-copy marginX5"></i>喜欢的文章</span>
@@ -270,15 +278,17 @@ export default {
       inputName: '', // 专题名
       imgurl: '', // 专题头像
       description: '', // 专题简介
-      subjectList: [] // 专题列表
+      subjectList: [], // 专题列表
+      likedSubjects: [] // 喜欢的专题列表
     }
   },
   watch: {
     activeName (newVal, oldVal) {
-      if (newVal === 'first') {
-        // this.getPage(1)
-      } else if (newVal === 'second') {
+      if (newVal === 'second') {
         this.getPage(2)
+      }
+      if (newVal === 'first' && oldVal === 'second') {
+        this.getlikedSubjects()
       }
     },
     activeName2 (newVal, oldVal) {
@@ -299,6 +309,7 @@ export default {
       this.getNum()
       this.getCollection()
       this.getSubjects()
+      this.getlikedSubjects()
       // this.getPage(1)
     })
   },
@@ -352,29 +363,17 @@ export default {
         console.log(e)
       })
     },
-    getPage (type) {
+    getPage () {
       this.isLoading = true
-      this.axios.post(api.getLikeList, { userId: this.userId, type: type }).then(res => {
+      this.axios.post(api.getLikeList, { userId: this.userId }).then(res => {
         this.isLoading = false
         if (res.status === 200) {
-          switch (type) {
-            case 1:
-              this.newPublish = res.data
-              this.newPublish.forEach(item => {
-                if (item.content_text.length > 40) {
-                  item.content_text = item.content_text.substr(0, 80) + '...'
-                }
-              })
-              break
-            case 2:
-              this.likeArticle = res.data
-              this.likeArticle.forEach(item => {
-                if (item.articleId.content_text.length > 40) {
-                  item.articleId.content_text = item.articleId.content_text.substr(0, 80) + '...'
-                }
-              })
-              break
-          }
+          this.likeArticle = res.data
+          this.likeArticle.forEach(item => {
+            if (item.articleId.content_text.length > 40) {
+              item.articleId.content_text = item.articleId.content_text.substr(0, 80) + '...'
+            }
+          })
         } else {
           this.$message.error('获取失败')
         }
@@ -396,6 +395,30 @@ export default {
         }
       }).catch(e => {
         console.log(e)
+      })
+    },
+    getlikedSubjects () {
+      this.axios.post(api.getLikedSubjects, {userId: this.userId}).then(res => {
+        if (res.status === 200) {
+          this.likedSubjects = res.data.focusSubject
+          if (this.likedSubjects.length > 0) {
+            this.likedSubjects.forEach(element => {
+              let hasFocus = false
+              if (element.fansList.length > 0) {
+                element.fansList.forEach(ele => {
+                  if (ele._id === this.userId) {
+                    hasFocus = true
+                  }
+                })
+                this.$set(element, 'hasFocus', hasFocus)
+              }
+            })
+          }
+        } else {
+          this.$message.error('获取失败！')
+        }
+      }).catch(e => {
+
       })
     },
     getSubjects () {
@@ -502,6 +525,19 @@ export default {
           this.getSubjects()
         } else {
           this.$message.error('新建失败！')
+        }
+      }).catch(e => {
+        console.log(e)
+      })
+    },
+    cancelFocus (item) {
+      this.axios.post(api.cancelFocusSubject, {userId: this.userId, subjectId: item._id}).then(res => {
+        if (res.status === 200) {
+          this.$message.success('取消关注成功！')
+          item.hasFocus = false
+          this.getlikedSubjects()
+        } else {
+          this.$message.error('取消失败!')
         }
       }).catch(e => {
         console.log(e)

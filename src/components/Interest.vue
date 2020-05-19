@@ -117,20 +117,30 @@ export default {
     handleChoose (num) {
       switch (num) {
         case 1: this.chooseText = '全部关注'
+          this.getList()
           break
         case 2: this.chooseText = '只看作者'
+          this.getList(1)
           break
         case 3: this.chooseText = '只看文集'
+          this.getList(2)
           break
       }
       this.visible = false
     },
-    getList () {
+    getList (type) {
       this.axios.post(api.getFocusList, {
-        userId: this.userId
+        userId: this.userId,
+        type: type
       }).then(res => {
         if (res.status === 200) {
-          this.list = res.data.fansList.concat(res.data.focusSubject)
+          if (type === 1) {
+            this.list = res.data.fansList
+          } else if (type === 2) {
+            this.list = res.data.focusSubject
+          } else {
+            this.list = res.data.fansList.concat(res.data.focusSubject)
+          }
         } else {
           this.$message.error('获取数据失败！')
         }
