@@ -158,11 +158,11 @@
                 </div>
               </li>
             </ul>
-            <el-button type="info" round class="load-more" v-if="hasmore2">阅读更多</el-button>
-            <div class="find-noting" v-if="likeArticle.length===0">
+            <div class="find-noting" v-else>
               <img :src="nothing" alt="找不到结果">
               <div>这里还没有内容~</div>
             </div>
+            <el-button type="info" round class="load-more" v-if="hasmore2">阅读更多</el-button>
           </el-tab-pane>
         </el-tabs>
       </el-col>

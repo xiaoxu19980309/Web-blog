@@ -10,7 +10,7 @@
                 <i class="iconfont icon-jiahao1"></i>
                 关注
               </el-button>
-              <el-button v-else type="info" round>
+              <el-button v-else type="info" round @click="cancelConcern(item)">
                 <i class="iconfont icon-jiahao1"></i>
                 已关注
               </el-button>
@@ -145,6 +145,20 @@ export default {
           this.getList()
         } else {
           this.$message.error('关注失败')
+        }
+      }).catch(e => {
+
+      })
+    },
+    cancelConcern (item) {
+      this.isLoading = true
+      this.axios.post(api.cancelFocusUser, {userId: this.userId, focusId: item._id}).then(res => {
+        this.isLoading = false
+        if (res.status === 200) {
+          this.$message.success('取消关注成功！')
+          this.getList()
+        } else {
+          this.$message.error('取消关注失败')
         }
       }).catch(e => {
 

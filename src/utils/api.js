@@ -18,6 +18,7 @@ const api = {
   recoverArticle: '/api/article/recoverArticle', // 恢复文章
   updateArticle: '/api/article/updateArticle', // 修改文章
   insertIssue: '/api/article/insertIssue', // 发布文章
+  editIssue: '/api/article/editIssue', // 修改发布
   resendArticle: '/api/article/resendArticle', // 转发文章
   getHomePage: '/api/article/getHomePage', // 获取个人主页
   getComments: '/api/article/getComments', // 获取文章评论
@@ -25,6 +26,7 @@ const api = {
   insertReply: '/api/article/insertReply', // 发表回复
   deleteComment: '/api/article/deleteComment', // 删除评论
   deleteReply: '/api/article/deleteReply', // 删除回复
+  getCollArticle: '/api/article/getCollArticle', // 根据文章id获取文集下的文章
 
   getLikes: '/api/operate/getLikes', // 获取喜欢状态
   getLikedList: '/api/operate/getLikedList', // 收到的喜欢列表

@@ -42,6 +42,10 @@ export default {
     this.q = keys.q
     this.changePart()
   },
+  updated () {
+    let keys = this.$route.query
+    this.q = keys.q
+  },
   beforeUpdate () {
     this.changePart()
   },

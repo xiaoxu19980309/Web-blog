@@ -41,7 +41,8 @@
           </a> -->
           <el-popover placement="top" trigger="click">
           <ul>
-            <li><el-button type="text" @click="collectArticle">收藏文章</el-button></li>
+            <li><el-button type="text" v-if="!isWriter" @click="collectArticle">收藏文章</el-button></li>
+            <li><el-button type="text" @click="editArticle">编辑文章</el-button></li>
             <li><el-button type="text" v-if="!isWriter" @click="resendArticle">转发</el-button></li>
           </ul>
           <div class="iconbtn" slot="reference">
@@ -168,6 +169,7 @@ export default {
       replyShow: false, // 回复按钮是否显示
       isResend: false, // 是否为转发
       articleId: '',
+      draftId: '',
       userId: '',
       title: '',
       content: '',
@@ -199,6 +201,7 @@ export default {
       this.length = res.data.content_text.length
       this.user = res.data.userId
       this.isResend = res.data.isResend
+      this.draftId = res.data.draftId
       this.commentList = res.data.commentList
       if (this.user._id === this.userId) {
         this.isWriter = true
@@ -480,6 +483,9 @@ export default {
       }).catch(e => {
         console.log(e)
       })
+    },
+    editArticle () {
+      this.$router.push({path: '/write', query: { draftId: this.draftId }})
     }
   }
 }

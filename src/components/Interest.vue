@@ -26,7 +26,7 @@
             <el-button type="text" style="color: #666;width: 100%"
             onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'"
             @click="handleChoose(3)">
-              只看文集
+              只看专题
             </el-button>
           </li>
         </ul>
@@ -122,7 +122,7 @@ export default {
         case 2: this.chooseText = '只看作者'
           this.getList(1)
           break
-        case 3: this.chooseText = '只看文集'
+        case 3: this.chooseText = '只看专题'
           this.getList(2)
           break
       }
@@ -135,11 +135,11 @@ export default {
       }).then(res => {
         if (res.status === 200) {
           if (type === 1) {
-            this.list = res.data.fansList
+            this.list = res.data.focusList
           } else if (type === 2) {
             this.list = res.data.focusSubject
           } else {
-            this.list = res.data.fansList.concat(res.data.focusSubject)
+            this.list = res.data.focusList.concat(res.data.focusSubject)
           }
         } else {
           this.$message.error('获取数据失败！')

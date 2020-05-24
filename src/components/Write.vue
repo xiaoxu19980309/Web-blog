@@ -103,7 +103,13 @@
                   >
                   <span>
                     <ul class="ul_demo">
-                      <li>
+                      <li v-if="item.has_publish">
+                        <el-button type="text" style="color: #666;width: 100%;padding:12px;"
+                        onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'" @click="issueAgain(item, index)">
+                          <i class="iconfont icon-zhuanfa1" style="margin-right: 8px"></i>修改发布
+                        </el-button>
+                      </li>
+                      <li v-else>
                         <el-button type="text" style="color: #666;width: 100%;padding:12px;"
                         onMouseOver="this.style.color='#409eff'" onMouseOut="this.style.color='#666'" @click="issueNow(item, index)">
                           <i class="iconfont icon-zhuanfa1" style="margin-right: 8px"></i>直接发布
@@ -229,6 +235,8 @@ export default {
       dialogVisible1: false, // 常见问题
       dialogVisible2: false, // 弹窗修改文集名
       hasArticle: false, // 没有文章
+      draftId: '', // 编辑文章
+      userId: '', // 用户id
       editContent: '',
       editContentText: '',
       currentItem: {},
@@ -304,12 +312,18 @@ export default {
   },
   mounted () {
     if (sessionStorage.getItem('user')) {
-
+      let user = JSON.parse(sessionStorage.getItem('user'))
+      this.userId = user.userId
     } else {
       this.$router.replace('/login')
     }
+    let keys = this.$route.query
     addQuillTitle()
     this.getList()
+    if (keys.draftId) {
+      this.draftId = keys.draftId
+      this.initArticle()
+    }
   },
   methods: {
     getList (type) {
@@ -478,6 +492,24 @@ export default {
 
       })
     },
+    // 修改发布
+    issueAgain (item, index) {
+      this.axios.post(api.editIssue, {
+        draftId: item._id,
+        userId: this.userId
+      }).then(res => {
+        if (res.status === 200) {
+          this.$message.success('发布成功！')
+          this.currentItem.articleList.splice(index, 1)
+          this.articleTitle = ''
+          this.editContent = ''
+        } else {
+          this.$message.error('发布失败！')
+        }
+      }).catch(e => {
+
+      })
+    },
     // 设置禁止转载
     setting (item) {
       this.axios.post(api.updateArticle, {
@@ -562,6 +594,30 @@ export default {
         console.log(e)
       })
       this.$refs.uploadFile.value = null
+    },
+    initArticle () {
+      this.axios.post(api.getCollArticle, {draftId: this.draftId, userId: this.userId}).then(res => {
+        if (res.status === 200) {
+          this.articleTitle = res.data.articleList[0].title
+          this.editContent = res.data.articleList[0].content
+          this.collections.forEach((Element, index) => {
+            if (Element._id === res.data._id) {
+              this.currentIndex1 = index
+            }
+          })
+          this.currentItem = res.data
+          this.currentItem.articleList.forEach((Element, index) => {
+            if (Element._id.toString() === this.draftId) {
+              this.currentIndex2 = index
+              this.hasArticle = true
+            }
+          })
+        } else {
+          this.$message.error('获取文章信息失败!')
+        }
+      }).catch(e => {
+
+      })
     }
   }
 }
