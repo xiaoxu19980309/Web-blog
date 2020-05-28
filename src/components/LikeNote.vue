@@ -41,11 +41,11 @@
         </div>
         <el-tabs v-if="activePart==='first'" v-model="activeName" v-loading.lock="isLoading">
           <el-tab-pane name="first">
-            <span slot="label"><i class="iconfont icon-wenzhang2 marginX5"></i>关注的专题/文集</span>
+            <span slot="label"><i class="iconfont icon-wenzhang2 marginX5"></i>关注的专题</span>
             <ul class="add-follow-list" v-if="likedSubjects.length!==0">
               <li v-for="(item, index) in likedSubjects" :key="index">
                 <div>
-                  <el-button v-if="!item.hasFocus" type="success" round @click="focusSubject(item)">
+                  <el-button v-if="item.hasFocus" type="success" round @click="focusSubject(item)">
                     <i class="iconfont icon-jiahao1"></i>
                     关注
                   </el-button>
@@ -101,11 +101,11 @@
                 </li>
               </div>
             </ul>
-            <el-button type="info" round class="load-more" v-if="hasmore2">阅读更多</el-button>
-            <div class="find-noting" v-if="likeArticle.length===0">
+            <div class="find-noting" v-else>
               <img :src="nothing" alt="找不到结果">
               <div>这里还没有内容~</div>
             </div>
+            <el-button type="info" round class="load-more" v-if="hasmore2">阅读更多</el-button>
           </el-tab-pane>
         </el-tabs>
         <el-tabs v-if="activePart==='second'" v-model="activeName2" v-loading.lock="isLoading">
@@ -133,7 +133,7 @@
               </li>
             </ul>
             <el-backtop target=".el-header"></el-backtop>
-            <el-button type="info" round class="load-more" v-if="hasmore1">阅读更多</el-button>
+            <el-button type="info" round class="load-more" v-if="hasmore3">阅读更多</el-button>
             <div class="find-noting" v-if="userList.length===0">
               <img :src="nothing" alt="找不到结果">
               <div>这里还没有内容~</div>
@@ -162,19 +162,19 @@
               <img :src="nothing" alt="找不到结果">
               <div>这里还没有内容~</div>
             </div>
-            <el-button type="info" round class="load-more" v-if="hasmore2">阅读更多</el-button>
+            <el-button type="info" round class="load-more" v-if="hasmore4">阅读更多</el-button>
           </el-tab-pane>
         </el-tabs>
       </el-col>
       <el-col :span="7" :offset="1">
         <div class="padding20X textAlignLeft border-topf0 border-bottomf0">
           <div class="marginBottom15">
-            <a class="_spanhover" @click="activeName = 'first'">
+            <a class="_spanhover" @click="handleClick(3)">
             <i class="iconfont icon-caidan1"></i>
-            <span>我关注的专题/文集</span></a>
+            <span>我关注的专题</span></a>
           </div>
           <div>
-            <a class="_spanhover" @click="activeName = 'second'">
+            <a class="_spanhover" @click="handleClick(4)">
             <i class="iconfont icon-aixin"></i>
             <span>我喜欢的文章</span></a>
           </div>
@@ -270,6 +270,8 @@ export default {
       likeArticle: [], // 喜欢的文章
       hasmore1: false,
       hasmore2: false,
+      hasmore3: false,
+      hasmore4: false,
       user: {},
       collections: [], // 文集
       userList: [], // 关注用户列表
@@ -328,6 +330,12 @@ export default {
         case 2: this.activePart = 'second'
           this.activeName2 = 'second'
           this.getDataList(2)
+          break
+        case 3: this.activePart = 'first'
+          this.activeName = 'first'
+          break
+        case 4: this.activePart = 'first'
+          this.activeName = 'second'
           break
       }
     },

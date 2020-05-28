@@ -25,7 +25,7 @@
             </div>
           </ul>
         </div>
-        <el-button type="info" round class="load-more" v-if="hasmore">阅读更多</el-button>
+        <el-button type="info" round class="load-more" v-if="hasmore" @click="readMore()">阅读更多</el-button>
       </el-col>
     </el-row>
   </div>
@@ -44,6 +44,7 @@ export default {
       isLoading: false,
       hasmore: false,
       userId: '',
+      page: 1,
       list: []
     }
   },
@@ -53,7 +54,7 @@ export default {
       this.userId = user.userId
     }
     this.isLoading = true
-    this.getData()
+    this.getData(this.page)
   },
   methods: {
     loading () {
@@ -62,20 +63,35 @@ export default {
         this.isLoading = false
       }, 2000)
     },
-    getData () {
-      this.axios.post(api.getStores, {userId: this.userId}).then(res => {
+    getData (page) {
+      this.axios.post(api.getStores, {userId: this.userId, page: page}).then(res => {
+        this.isLoading = false
         if (res.status === 200) {
-          this.list = res.data
-          this.isLoading = false
-          this.list.forEach(element => {
+          let ans = res.data
+          ans.forEach(element => {
             element.articleId.content_text = element.articleId.content_text.substr(0, 80) + '...'
           })
+          if (this.page === 1) {
+            this.list = ans
+          } else {
+            this.list = this.list.concat(ans)
+            if (res.data.length === 0) {
+              this.hasmore = false
+            }
+          }
+          if (res.data.length === 10) {
+            this.hasmore = true
+          }
         } else {
           this.$message.error('获取收藏列表失败！')
         }
       }).catch(e => {
 
       })
+    },
+    readMore () {
+      this.page++
+      this.getData(this.page)
     }
   }
 }

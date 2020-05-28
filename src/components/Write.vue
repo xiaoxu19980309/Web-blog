@@ -152,8 +152,9 @@
       </el-col>
       <el-col :span="16" class="right" :style="{'backgroundColor': (hasArticle? 'white':'#f2f2f2')}">
         <div class="_3edit" v-show="hasArticle">
+          <span class="rtText _spanhover" v-show="!hasSaved" @click="save()">保存</span>
           <span class="rtText" v-show="hasSaved">已保存</span>
-          <span class="rtText" v-show="!hasSaved">保存中...</span>
+          <!-- <span class="rtText" v-show="!hasSaved">保存中...</span> -->
           <input v-model="articleTitle" class="_inputT" />
           <div class="">
             <quill-editor
@@ -260,13 +261,7 @@ export default {
       },
       collections: [],
       articleTitle: '无标题文章',
-      hasSaved: true,
-      isfirst1: true,
-      isfirst2: true,
-      countChange1: false,
-      countChange2: false,
-      timeOut1: '',
-      timeOut2: ''
+      hasSaved: false
     }
   },
   watch: {
@@ -281,33 +276,7 @@ export default {
     },
     articleTitle (newVal, oldVal) {
       console.log(oldVal, '///', newVal, '////')
-      if (this.isfirst1) {
-        this.isfirst1 = false
-        return
-      }
-      if (this.countChange1) {
-        clearTimeout(this.timeOut1)
-        this.countChange1 = false
-        return
-      }
       this.currentItem.articleList[this.currentIndex2].title = newVal
-      this.timeOut1 = setTimeout(() => {
-        this.hasSaved = false
-        this.countChange1 = true
-        this.axios.post(api.updateArticle, {
-          articleId: this.currentItem.articleList[this.currentIndex2]._id,
-          title: newVal
-        }).then(res => {
-          if (res.status === 200) {
-            this.hasSaved = true
-            this.countChange1 = false
-          } else {
-            this.$message.error('保存失败！')
-          }
-        }).catch(e => {
-          console.log(e)
-        })
-      }, 1000)
     }
   },
   mounted () {
@@ -385,6 +354,8 @@ export default {
     chooseArti (index) {
       this.currentIndex2 = index
       this.hasArticle = true
+      this.articleTitle = this.currentItem.articleList[index].title
+      this.editContent = this.currentItem.articleList[index].content
     },
     confirmEditC () {
       if (this.newClassName.trim().length === 0) {
@@ -464,6 +435,7 @@ export default {
         if (res.status === 200) {
           this.$message.success('删除成功！')
           this.currentItem.articleList.splice(index, 1)
+          this.hasArticle = false
         } else {
           this.$message.error('删除失败！')
         }
@@ -538,34 +510,23 @@ export default {
 
     },
     onEditorChange ({ quill, html, text }) {
-      if (this.isfirst2) {
-        this.isfirst2 = false
-        return
-      }
-      if (this.countChange2) {
-        clearTimeout(this.timeOut2)
-        this.countChange2 = false
-        return
-      }
       this.editContentText = text
-      this.timeOut2 = setTimeout(() => {
-        this.hasSaved = false
-        this.countChange2 = true
-        this.axios.post(api.updateArticle, {
-          articleId: this.currentItem.articleList[this.currentIndex2]._id,
-          content: html,
-          content_text: text
-        }).then(res => {
-          if (res.status === 200) {
-            this.hasSaved = true
-            this.countChange2 = false
-          } else {
-            this.$message.error('保存失败！')
-          }
-        }).catch(e => {
-          console.log(e)
-        })
-      }, 1000)
+    },
+    save () {
+      this.hasSaved = false
+      this.axios.post(api.updateArticle, {
+        articleId: this.currentItem.articleList[this.currentIndex2]._id,
+        content: this.editContent,
+        content_text: this.editContentText
+      }).then(res => {
+        if (res.status === 200) {
+          this.hasSaved = true
+        } else {
+          this.$message.error('保存失败！')
+        }
+      }).catch(e => {
+        console.log(e)
+      })
     },
     changePhoto () {
       this.$refs.uploadFile.click()
@@ -598,11 +559,10 @@ export default {
     initArticle () {
       this.axios.post(api.getCollArticle, {draftId: this.draftId, userId: this.userId}).then(res => {
         if (res.status === 200) {
-          this.articleTitle = res.data.articleList[0].title
-          this.editContent = res.data.articleList[0].content
           this.collections.forEach((Element, index) => {
             if (Element._id === res.data._id) {
               this.currentIndex1 = index
+              this.collections[index] = res.data
             }
           })
           this.currentItem = res.data
@@ -610,6 +570,8 @@ export default {
             if (Element._id.toString() === this.draftId) {
               this.currentIndex2 = index
               this.hasArticle = true
+              this.articleTitle = Element.title
+              this.editContent = Element.content
             }
           })
         } else {
@@ -855,6 +817,9 @@ export default {
     ul li{
       margin-top: 20px;
     }
+  }
+  .ql-snow .ql-tooltip{
+    left: 0!important;
   }
 }
 </style>
