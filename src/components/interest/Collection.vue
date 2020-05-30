@@ -7,16 +7,6 @@
             <img v-if="info.photo" :src="info.photo" alt="">
             <img v-else :src="defaultImg" alt="">
           </a>
-          <a v-if="!isWriter" class="btn btn-default following">
-            <span v-show="hasFollow">
-              <i class="el-icon-check"></i>
-              <span>已关注</span>
-            </span>
-            <span v-show="!hasFollow">
-              <i class="el-icon-close"></i>
-              <span>取消关注</span>
-            </span>
-          </a>
           <a v-if="!isWriter&&!hasFollow" class="btn btn-success">
             <i class="el-icon-plus"></i>
             <span>关注</span>

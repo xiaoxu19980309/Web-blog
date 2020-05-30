@@ -9,20 +9,7 @@
           <i class="el-icon-check"></i>
           <span>已关注</span>
         </span>
-        <!-- <span v-show="!hasFollow">
-          <i class="el-icon-close"></i>
-          <span>取消关注</span>
-        </span> -->
       </a>
-      <!-- <a href="" class="btn btn-success" v-if="!isMine">
-        <i class="el-icon-plus"></i>
-        <span>发简信</span>
-      </a> -->
-      <!-- <a :href="'/#/user?id='+userId" target="_blank" class="btn btn-hollow">
-        专题主页
-        <i class="el-icon-arrow-right"></i>
-      </a> -->
-      <!-- <a class="btn btn-hollow" @click="showDialog = true">投稿</a> -->
       <div class="title">
         <a href="" target="_blank" class="name">{{user.nickname}}</a>
       </div>
@@ -69,7 +56,6 @@
                 <a :href="'/#/article?articleId='+item._id" target="_blank" class="title">{{item.articleId.title}}</a>
                 <p class="abstract" v-text="item.articleId.content_text"></p>
                 <div class="meta">
-                  <!-- <a href="" target="_blank"><i class="iconfont icon-yanjing marginX5"></i>9</a> -->
                   <a href="" target="_blank"><i class="iconfont icon-pinglun1 marginX5"></i>{{item.articleId.commentsCount}}</a>
                   <span><i class="iconfont icon-aixin1 color96 marginX5"></i>{{item.articleId.likesCount}}</span>
                   <span>{{item.gmt_modified}}</span>
@@ -109,16 +95,6 @@
         </div>
       </el-tab-pane>
     </el-tabs>
-    <el-dialog
-      title="给该专题投稿"
-      :visible.sync="showDialog"
-      width="50%"
-      >
-      <el-input placeholder="搜索我的文章" class="search-input">
-        <el-button slot="append" icon="el-icon-search"></el-button>
-      </el-input>
-      <div class="margin20X textAlignLeft">132456</div>
-    </el-dialog>
   </div>
 </template>
 
@@ -139,7 +115,6 @@ export default {
       userId: '',
       isMine: false,
       hasFollow: true,
-      showDialog: false,
       newPublish: [],
       newComment: [],
       newHot: [],
